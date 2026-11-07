@@ -82,6 +82,9 @@ public final class HomepageStyleController {
     private boolean mBottomMode;
     private final float mSearchRadius;
     private final ColorStateList mSearchColour;
+    private final LinearLayout.LayoutParams mSearchParams;
+    private final int mSearchMinHeight;
+    private final int mSearchPaddingH;
 
     public HomepageStyleController(SettingsHomepageActivity activity) {
         mContext = activity;
@@ -108,11 +111,20 @@ public final class HomepageStyleController {
                 (CoordinatorLayout.LayoutParams) mAppBar.getLayoutParams());
         final View firstChild = mAppBarContainer.getChildAt(0);
         if (firstChild instanceof MaterialCardView) {
-            mSearchRadius = ((MaterialCardView) firstChild).getRadius();
-            mSearchColour = ((MaterialCardView) firstChild).getCardBackgroundColor();
+            final MaterialCardView card = (MaterialCardView) firstChild;
+            mSearchRadius = card.getRadius();
+            mSearchColour = card.getCardBackgroundColor();
+            mSearchParams = new LinearLayout.LayoutParams(
+                    (LinearLayout.LayoutParams) card.getLayoutParams());
+            final View inner = card.findViewById(R.id.search_action_bar);
+            mSearchMinHeight = inner.getMinimumHeight();
+            mSearchPaddingH = inner.getPaddingLeft();
         } else {
             mSearchRadius = 0;
             mSearchColour = null;
+            mSearchParams = null;
+            mSearchMinHeight = 0;
+            mSearchPaddingH = 0;
         }
         mOriginalScrollBehavior = ((CoordinatorLayout.LayoutParams)
                 mScroll.getLayoutParams()).getBehavior();
@@ -289,20 +301,38 @@ public final class HomepageStyleController {
         mRoot.requestLayout();
     }
 
-    /** Turns the search card into a pill in card layout, and restores it otherwise. */
-    private void applySearchPill(boolean pill) {
+    /**
+     * In card layout the search bar becomes a round icon button at the top right. Otherwise it
+     * is restored to the full-width search bar.
+     */
+    private void applySearchPill(boolean round) {
         if (!(mAppBarContainer.getChildAt(0) instanceof MaterialCardView)) {
             return;
         }
         final MaterialCardView card = (MaterialCardView) mAppBarContainer.getChildAt(0);
-        if (pill) {
-            card.setRadius(dp(36));
+        final View inner = card.findViewById(R.id.search_action_bar);
+        final View title = card.findViewById(R.id.search_bar_title);
+        if (round) {
+            final int size = dp(56);
+            final LinearLayout.LayoutParams params =
+                    new LinearLayout.LayoutParams(size, size);
+            params.gravity = Gravity.END;
+            card.setLayoutParams(params);
+            card.setRadius(size / 2f);
             card.setCardBackgroundColor(ColorStateList.valueOf(
                     Utils.getColorAttrDefaultColor(mContext,
                             android.R.attr.colorBackgroundFloating)));
-        } else {
+            title.setVisibility(View.GONE);
+            inner.setMinimumHeight(size);
+            inner.setPadding(dp(16), 0, dp(16), 0);
+        } else if (mSearchParams != null) {
+            card.setLayoutParams(new LinearLayout.LayoutParams(mSearchParams));
             card.setRadius(mSearchRadius);
             card.setCardBackgroundColor(mSearchColour);
+            title.setVisibility(View.VISIBLE);
+            inner.setMinimumHeight(mSearchMinHeight);
+            inner.setPadding(mSearchPaddingH, inner.getPaddingTop(), mSearchPaddingH,
+                    inner.getPaddingBottom());
         }
     }
 

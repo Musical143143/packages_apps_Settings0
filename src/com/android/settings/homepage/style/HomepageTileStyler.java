@@ -60,6 +60,8 @@ public final class HomepageTileStyler {
     };
     private static final int ICON_TINT_ALPHA = 0x33;
     private static final int LIGHT_CARD_FILL = 0xF0F5F2FF;
+    private static final int ACCOUNT_BANNER_START = 0xFFEDE7FF;
+    private static final int ACCOUNT_BANNER_END = 0xFFD6C8FF;
 
     private HomepageTileStyler() {
     }
@@ -154,7 +156,7 @@ public final class HomepageTileStyler {
         if (card == null || tile.getBackground() != card) {
             tile.setTag(R.id.homepage_style_original_bg_tag, tile.getBackground());
         }
-        final Drawable shapeDrawable = buildCardShape(context, groupTop, groupBottom);
+        final Drawable shapeDrawable = buildCardShape(context, groupTop, groupBottom, isAccount);
         final int text = Utils.getColorAttrDefaultColor(context, android.R.attr.textColorPrimary);
         final RippleDrawable ripple = new RippleDrawable(
                 ColorStateList.valueOf(ColorUtils.setAlphaComponent(text, 0x1F)),
@@ -195,7 +197,7 @@ public final class HomepageTileStyler {
     }
 
     private static GradientDrawable buildCardShape(Context context, boolean groupTop,
-            boolean groupBottom) {
+            boolean groupBottom, boolean isAccount) {
         final float r = dp(context, CARD_CORNER_DP);
         final float[] radii = new float[8];
         if (groupTop) {
@@ -217,8 +219,14 @@ public final class HomepageTileStyler {
         final int surface = Utils.getColorAttrDefaultColor(context,
                 android.R.attr.colorBackgroundFloating);
         // Light theme gets the lavender-white card from the mockup; dark keeps the surface.
-        shape.setColor(ColorUtils.calculateLuminance(surface) > 0.5
-                ? LIGHT_CARD_FILL : surface);
+        final boolean light = ColorUtils.calculateLuminance(surface) > 0.5;
+        if (light && isAccount) {
+            // The account row is the banner at the top of the mockup.
+            shape.setColors(new int[] {ACCOUNT_BANNER_START, ACCOUNT_BANNER_END});
+            shape.setOrientation(GradientDrawable.Orientation.TL_BR);
+        } else {
+            shape.setColor(light ? LIGHT_CARD_FILL : surface);
+        }
         final int text = Utils.getColorAttrDefaultColor(context, android.R.attr.textColorPrimary);
         shape.setStroke(Math.round(dp(context, 1)), ColorUtils.setAlphaComponent(text, 0x14));
         return shape;
