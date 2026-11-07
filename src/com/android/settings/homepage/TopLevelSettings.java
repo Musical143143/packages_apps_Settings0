@@ -16,6 +16,28 @@
 
 package com.android.settings.homepage;
 
+import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
+import android.util.TypedValue;
+import android.view.Gravity;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import androidx.preference.PreferenceGroupAdapter;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import com.android.settings.homepage.style.CardLayoutPreference;
+import com.android.settingslib.Utils;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import static com.android.settings.search.actionbar.SearchMenuController.NEED_SEARCH_ICON_IN_ACTION_BAR;
 import static com.android.settingslib.search.SearchIndexable.MOBILE;
 
@@ -79,6 +101,7 @@ public class TopLevelSettings extends DashboardFragment implements SplitLayoutLi
     private boolean mScrollNeeded = true;
     private boolean mFirstStarted = true;
     private ActivityEmbeddingController mActivityEmbeddingController;
+
 
     public TopLevelSettings() {
         final Bundle args = new Bundle();
@@ -197,6 +220,11 @@ public class TopLevelSettings extends DashboardFragment implements SplitLayoutLi
     public void onResume() {
         super.onResume();
         updateCardLayoutVisibility();
+        final RecyclerView recyclerView = getListView();
+        if (recyclerView != null) {
+            updateGridLayout(recyclerView);
+        }
+        applyLayout();
     }
 
     private void updateCardLayoutVisibility() {
@@ -293,6 +321,9 @@ public class TopLevelSettings extends DashboardFragment implements SplitLayoutLi
             return true;
         });
 
+        setupTileEditing(recyclerView);
+        updateGridLayout(recyclerView);
+
         recyclerView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
             @Override
             public void onViewAttachedToWindow(View v) {
@@ -374,6 +405,315 @@ public class TopLevelSettings extends DashboardFragment implements SplitLayoutLi
     protected boolean shouldForceRoundedIcon() {
         return getContext().getResources()
                 .getBoolean(R.bool.config_force_rounded_icon_TopLevelSettings);
+    }
+
+    /** Columns in the card grid. Tiles take 1 (half width) or 2 (full width). */
+    private static final int GRID_COLUMNS = 2;
+    // Bottom-right corner of a tile that resizes it while editing, in dp.
+    private static final int RESIZE_CORNER_DP = 56;
+    // Rows that sit side by side by default, like Connectivity and Network in the mockup.
+    private static final Set<String> HALF_WIDTH_BY_DEFAULT = new HashSet<>(Arrays.asList(
+            "top_level_network", "top_level_connected_devices"));
+    private static final String GRID_ACCOUNT_CATEGORY_KEY = "top_level_account_category";
+
+    private final Map<String, Integer> mOriginalOrders = new HashMap<>();
+    private GestureDetector mTapDetector;
+    private boolean mEditing;
+    private Map<String, Integer> mEditSnapshot;
+    private LinearLayout mEditBar;
+
+    /** Uses a two-column grid in card layout, so tiles can sit side by side. */
+    private void updateGridLayout(RecyclerView recyclerView) {
+        final Context context = recyclerView.getContext();
+        final boolean cards = HomepageStyle.isCardLayout(context);
+        if (cards && !(recyclerView.getLayoutManager() instanceof GridLayoutManager)) {
+            final GridLayoutManager grid = new GridLayoutManager(context, GRID_COLUMNS);
+            grid.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                @Override
+                public int getSpanSize(int position) {
+                    return spanFor(recyclerView, position);
+                }
+            });
+            recyclerView.setLayoutManager(grid);
+        } else if (!cards && recyclerView.getLayoutManager() instanceof GridLayoutManager) {
+            recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        }
+    }
+
+    private static int spanFor(RecyclerView recyclerView, int position) {
+        final Preference pref = itemAt(recyclerView, position);
+        if (!isGridTile(pref)) {
+            return GRID_COLUMNS;
+        }
+        return HomepageStyle.getTileSpan(recyclerView.getContext(), pref.getKey(),
+                defaultSpanFor(pref));
+    }
+
+    private static int defaultSpanFor(Preference pref) {
+        return HALF_WIDTH_BY_DEFAULT.contains(pref.getKey()) ? 1 : GRID_COLUMNS;
+    }
+
+    private static Preference itemAt(RecyclerView recyclerView, int position) {
+        final RecyclerView.Adapter adapter = recyclerView.getAdapter();
+        if (!(adapter instanceof PreferenceGroupAdapter)
+                || position < 0 || position >= adapter.getItemCount()) {
+            return null;
+        }
+        return ((PreferenceGroupAdapter) adapter).getItem(position);
+    }
+
+    /** Tiles are the rows that can be moved and resized; categories and card blocks cannot. */
+    private static boolean isGridTile(Preference pref) {
+        return pref != null && pref.getKey() != null
+                && !(pref instanceof PreferenceCategory)
+                && !(pref instanceof CardLayoutPreference)
+                && !(pref.getParent() != null
+                        && GRID_ACCOUNT_CATEGORY_KEY.equals(pref.getParent().getKey()));
+    }
+
+    /** Sets up long-press dragging, and resize taps on the corner of a tile while editing. */
+    private void setupTileEditing(RecyclerView recyclerView) {
+        final ItemTouchHelper touchHelper = new ItemTouchHelper(
+                new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN
+                        | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT, 0) {
+                    @Override
+                    public boolean isLongPressDragEnabled() {
+                        return HomepageStyle.isCardLayout(recyclerView.getContext());
+                    }
+
+                    @Override
+                    public boolean onMove(RecyclerView rv, RecyclerView.ViewHolder from,
+                            RecyclerView.ViewHolder to) {
+                        return moveTile(rv, from.getAdapterPosition(), to.getAdapterPosition());
+                    }
+
+                    @Override
+                    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                    }
+
+                    @Override
+                    public void onSelectedChanged(RecyclerView.ViewHolder viewHolder,
+                            int actionState) {
+                        super.onSelectedChanged(viewHolder, actionState);
+                        if (actionState == ItemTouchHelper.ACTION_STATE_DRAG) {
+                            startEditing(recyclerView);
+                        }
+                    }
+                });
+        touchHelper.attachToRecyclerView(recyclerView);
+
+        mTapDetector = new GestureDetector(recyclerView.getContext(),
+                new GestureDetector.SimpleOnGestureListener() {
+                    @Override
+                    public boolean onSingleTapUp(MotionEvent e) {
+                        return mEditing && toggleResizeAt(recyclerView, e.getX(), e.getY());
+                    }
+                });
+        recyclerView.addOnItemTouchListener(new RecyclerView.SimpleOnItemTouchListener() {
+            @Override
+            public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
+                mTapDetector.onTouchEvent(e);
+                return false;
+            }
+        });
+    }
+
+    private void startEditing(RecyclerView recyclerView) {
+        if (mEditing || !HomepageStyle.isCardLayout(recyclerView.getContext())) {
+            return;
+        }
+        mEditing = true;
+        mEditSnapshot = HomepageStyle.getTileLayout(recyclerView.getContext());
+        HomepageTileStyler.setEditing(true);
+        showEditBar(recyclerView);
+        recyclerView.invalidate();
+    }
+
+    private void finishEditing(boolean discard) {
+        if (!mEditing) {
+            return;
+        }
+        if (discard && mEditSnapshot != null) {
+            HomepageStyle.setTileLayout(getContext(), mEditSnapshot);
+        }
+        mEditing = false;
+        mEditSnapshot = null;
+        HomepageTileStyler.setEditing(false);
+        if (mEditBar != null) {
+            mEditBar.setVisibility(View.GONE);
+        }
+        applyLayout();
+        final RecyclerView recyclerView = getListView();
+        if (recyclerView != null) {
+            refreshGrid(recyclerView);
+        }
+    }
+
+    private void resetLayout() {
+        HomepageStyle.setTileLayout(getContext(), new HashMap<>());
+        applyLayout();
+        final RecyclerView recyclerView = getListView();
+        if (recyclerView != null) {
+            refreshGrid(recyclerView);
+        }
+    }
+
+    /** Moves a tile to the position of another tile in the same group. */
+    private boolean moveTile(RecyclerView recyclerView, int from, int to) {
+        final Preference moving = itemAt(recyclerView, from);
+        final Preference target = itemAt(recyclerView, to);
+        if (!isGridTile(moving) || !isGridTile(target)
+                || moving.getParent() == null || moving.getParent() != target.getParent()) {
+            return false;
+        }
+        final PreferenceGroup group = (PreferenceGroup) moving.getParent();
+        final List<Preference> tiles = new ArrayList<>();
+        final List<Integer> slots = new ArrayList<>();
+        for (int i = 0; i < group.getPreferenceCount(); i++) {
+            final Preference pref = group.getPreference(i);
+            if (isGridTile(pref)) {
+                tiles.add(pref);
+                slots.add(pref.getOrder());
+            }
+        }
+        Collections.sort(slots);
+        final int fromIndex = tiles.indexOf(moving);
+        final int toIndex = tiles.indexOf(target);
+        if (fromIndex < 0 || toIndex < 0) {
+            return false;
+        }
+        tiles.remove(fromIndex);
+        tiles.add(toIndex, moving);
+        // The tiles keep the same set of order values, so they never clash with other rows.
+        final Context context = recyclerView.getContext();
+        for (int i = 0; i < tiles.size(); i++) {
+            final Preference pref = tiles.get(i);
+            pref.setOrder(slots.get(i));
+            HomepageStyle.setTileOrder(context, pref.getKey(), slots.get(i));
+        }
+        return true;
+    }
+
+    /** Puts every tile where it was saved, or back to its original place when none is saved. */
+    private void applyLayout() {
+        if (getPreferenceScreen() != null) {
+            applyLayout(getPreferenceScreen());
+        }
+    }
+
+    private void applyLayout(PreferenceGroup group) {
+        final Context context = getContext();
+        final boolean cards = HomepageStyle.isCardLayout(context);
+        for (int i = 0; i < group.getPreferenceCount(); i++) {
+            final Preference pref = group.getPreference(i);
+            if (pref instanceof PreferenceGroup) {
+                applyLayout((PreferenceGroup) pref);
+            }
+            if (!isGridTile(pref)) {
+                continue;
+            }
+            final String key = pref.getKey();
+            if (!mOriginalOrders.containsKey(key)) {
+                mOriginalOrders.put(key, pref.getOrder());
+            }
+            final int saved = HomepageStyle.getTileOrder(context, key);
+            final int target = cards && saved >= 0 ? saved : mOriginalOrders.get(key);
+            if (pref.getOrder() != target) {
+                pref.setOrder(target);
+            }
+        }
+    }
+
+    /** Toggles a tile between half and full width when the tap lands on its resize corner. */
+    private boolean toggleResizeAt(RecyclerView recyclerView, float x, float y) {
+        final View child = recyclerView.findChildViewUnder(x, y);
+        if (child == null) {
+            return false;
+        }
+        final float edge = dpToPx(RESIZE_CORNER_DP);
+        if (x < child.getRight() - edge || y < child.getBottom() - edge) {
+            return false;
+        }
+        final Preference pref = itemAt(recyclerView,
+                recyclerView.getChildAdapterPosition(child));
+        if (!isGridTile(pref)) {
+            return false;
+        }
+        final Context context = recyclerView.getContext();
+        final int current = HomepageStyle.getTileSpan(context, pref.getKey(),
+                defaultSpanFor(pref));
+        HomepageStyle.setTileSpan(context, pref.getKey(), current == 1 ? 2 : 1);
+        refreshGrid(recyclerView);
+        return true;
+    }
+
+    private static void refreshGrid(RecyclerView recyclerView) {
+        if (recyclerView.getLayoutManager() instanceof GridLayoutManager) {
+            ((GridLayoutManager) recyclerView.getLayoutManager()).getSpanSizeLookup()
+                    .invalidateSpanIndexCache();
+        }
+        if (recyclerView.getAdapter() != null) {
+            recyclerView.getAdapter().notifyDataSetChanged();
+        }
+        recyclerView.invalidate();
+    }
+
+    private void showEditBar(RecyclerView recyclerView) {
+        final Context context = recyclerView.getContext();
+        if (mEditBar == null) {
+            mEditBar = new LinearLayout(context);
+            mEditBar.setOrientation(LinearLayout.HORIZONTAL);
+            mEditBar.setGravity(Gravity.CENTER);
+            final GradientDrawable pill = new GradientDrawable();
+            pill.setCornerRadius(dpToPx(28));
+            pill.setColor(Utils.getColorAttrDefaultColor(context,
+                    android.R.attr.colorBackgroundFloating));
+            mEditBar.setBackground(pill);
+            mEditBar.setElevation(dpToPx(6));
+            final int text = Utils.getColorAttrDefaultColor(context,
+                    android.R.attr.textColorPrimary);
+            final int accent = Utils.getColorAttrDefaultColor(context,
+                    android.R.attr.colorAccent);
+            mEditBar.addView(editAction(context, R.string.homepage_edit_discard, text,
+                    v -> finishEditing(true)));
+            mEditBar.addView(editAction(context, R.string.homepage_edit_reset, text,
+                    v -> resetLayout()));
+            mEditBar.addView(editAction(context, R.string.homepage_edit_done, accent,
+                    v -> finishEditing(false)));
+        }
+        mEditBar.setVisibility(View.VISIBLE);
+        if (mEditBar.getParent() == null) {
+            final ViewGroup parent = (ViewGroup) recyclerView.getParent();
+            final int margin = Math.round(dpToPx(16));
+            if (parent instanceof FrameLayout) {
+                final FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.BOTTOM);
+                params.setMargins(margin, 0, margin, Math.round(dpToPx(96)));
+                parent.addView(mEditBar, params);
+            } else {
+                parent.addView(mEditBar);
+            }
+        }
+    }
+
+    private TextView editAction(Context context, int textRes, int colour,
+            View.OnClickListener listener) {
+        final TextView action = new TextView(context);
+        action.setText(textRes);
+        action.setTextColor(colour);
+        action.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+        action.setTypeface(null, Typeface.BOLD);
+        final int padH = Math.round(dpToPx(20));
+        final int padV = Math.round(dpToPx(12));
+        action.setPadding(padH, padV, padH, padV);
+        action.setOnClickListener(listener);
+        return action;
+    }
+
+    private float dpToPx(int dp) {
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
+                getResources().getDisplayMetrics());
     }
 
     @Override

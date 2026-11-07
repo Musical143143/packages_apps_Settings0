@@ -16,6 +16,11 @@
 
 package com.android.settings.homepage.style;
 
+import android.graphics.Canvas;
+import android.graphics.DashPathEffect;
+import android.graphics.Paint;
+import android.graphics.PixelFormat;
+import android.graphics.RectF;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.PorterDuff;
@@ -99,11 +104,30 @@ public final class HomepageTileStyler {
     }
     private static final int DEFAULT_ROW_COLOUR = 0xFF6366F1;
     private static final int ICON_RING_ALPHA = 0x40;
+
+    // True while the top level list is being edited; rows then show their edit outline.
+    private static boolean sEditing;
     private static final int LIGHT_CARD_FILL = 0xF0F5F2FF;
     private static final int ACCOUNT_BANNER_START = 0xFFEDE7FF;
     private static final int ACCOUNT_BANNER_END = 0xFFD6C8FF;
 
     private HomepageTileStyler() {
+    }
+
+    /** Turns the edit outline and tap blocking on or off for the top level rows. */
+    public static void setEditing(boolean editing) {
+        sEditing = editing;
+    }
+
+    private static void applyEditState(View tile, boolean editing) {
+        final boolean outlined = tile.getForeground() instanceof TileEditOverlay;
+        if (editing && !outlined) {
+            tile.setForeground(new TileEditOverlay(tile.getContext()));
+            tile.setClickable(false);
+        } else if (!editing && outlined) {
+            tile.setForeground(null);
+            tile.setClickable(true);
+        }
     }
 
     /** Applies the current tile options to every row currently laid out in {@code list}. */
@@ -175,6 +199,7 @@ public final class HomepageTileStyler {
         final Preference pref = getPreference(list, position);
         final boolean isRow = cards && pref != null && !(pref instanceof PreferenceCategory)
                 && !(pref instanceof CardLayoutPreference);
+        applyEditState(tile, isRow && sEditing);
         if (!isRow) {
             restoreCard(tile);
             return;
@@ -417,5 +442,66 @@ public final class HomepageTileStyler {
     private static float dp(Context context, float value) {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value,
                 context.getResources().getDisplayMetrics());
+    }
+
+    /** Dashed outline, drag dots and a resize corner drawn over each row while editing. */
+    private static final class TileEditOverlay extends Drawable {
+        private final Paint mOutline = new Paint(Paint.ANTI_ALIAS_FLAG);
+        private final Paint mGlyph = new Paint(Paint.ANTI_ALIAS_FLAG);
+        private final Paint mDotPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        private final float mRadius;
+        private final float mInset;
+        private final float mEdge;
+        private final float mDot;
+        private final float mDotGap;
+
+        TileEditOverlay(Context context) {
+            final int colour = Utils.getColorAttrDefaultColor(context,
+                    android.R.attr.textColorPrimary);
+            mRadius = dp(context, CARD_CORNER_DP);
+            mInset = dp(context, 2);
+            mEdge = dp(context, 12);
+            mDot = dp(context, 2);
+            mDotGap = dp(context, 6);
+            mOutline.setStyle(Paint.Style.STROKE);
+            mOutline.setStrokeWidth(dp(context, 1.5f));
+            mOutline.setColor(ColorUtils.setAlphaComponent(colour, 0x80));
+            mOutline.setPathEffect(new DashPathEffect(
+                    new float[] {dp(context, 6), dp(context, 4)}, 0));
+            mGlyph.setStyle(Paint.Style.STROKE);
+            mGlyph.setStrokeWidth(dp(context, 2));
+            mGlyph.setStrokeCap(Paint.Cap.ROUND);
+            mGlyph.setColor(ColorUtils.setAlphaComponent(colour, 0xB3));
+            mDotPaint.setStyle(Paint.Style.FILL);
+            mDotPaint.setColor(ColorUtils.setAlphaComponent(colour, 0xB3));
+        }
+
+        @Override
+        public void draw(Canvas canvas) {
+            final RectF box = new RectF(getBounds());
+            box.inset(mInset, mInset);
+            canvas.drawRoundRect(box, mRadius, mRadius, mOutline);
+            // Three drag dots at the top right.
+            final float dotX = box.right - mEdge;
+            for (int i = 0; i < 3; i++) {
+                canvas.drawCircle(dotX, box.top + mEdge + i * mDotGap, mDot, mDotPaint);
+            }
+            // Resize corner at the bottom right.
+            canvas.drawLine(box.right - mEdge, box.bottom - mEdge / 4f,
+                    box.right - mEdge / 4f, box.bottom - mEdge, mGlyph);
+        }
+
+        @Override
+        public void setAlpha(int alpha) {
+        }
+
+        @Override
+        public void setColorFilter(android.graphics.ColorFilter colorFilter) {
+        }
+
+        @Override
+        public int getOpacity() {
+            return PixelFormat.TRANSLUCENT;
+        }
     }
 }

@@ -16,6 +16,8 @@
 
 package com.android.settings.homepage.style;
 
+import java.util.HashMap;
+import java.util.Map;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -174,6 +176,57 @@ public final class HomepageStyle {
     }
 
     /** {@link PreferenceDataStore} backed by the homepage style preferences. */
+    private static final String TILE_SPAN_PREFIX = "tile_span_";
+    private static final String TILE_ORDER_PREFIX = "tile_order_";
+
+    /** Columns a tile takes in the card grid: 1 (half width) or 2 (full width). */
+    public static int getTileSpan(Context context, String key, int defaultSpan) {
+        return prefs(context).getInt(TILE_SPAN_PREFIX + key, defaultSpan);
+    }
+
+    public static void setTileSpan(Context context, String key, int span) {
+        prefs(context).edit().putInt(TILE_SPAN_PREFIX + key, span).apply();
+    }
+
+    /** Saved position of a tile in its group, or -1 when it has not been moved. */
+    public static int getTileOrder(Context context, String key) {
+        return prefs(context).getInt(TILE_ORDER_PREFIX + key, -1);
+    }
+
+    public static void setTileOrder(Context context, String key, int order) {
+        prefs(context).edit().putInt(TILE_ORDER_PREFIX + key, order).apply();
+    }
+
+    /** Copies the saved tile span and order values, so an edit can be discarded. */
+    public static Map<String, Integer> getTileLayout(Context context) {
+        final Map<String, Integer> layout = new HashMap<>();
+        for (Map.Entry<String, ?> entry : prefs(context).getAll().entrySet()) {
+            if (isTileLayoutKey(entry.getKey()) && entry.getValue() instanceof Integer) {
+                layout.put(entry.getKey(), (Integer) entry.getValue());
+            }
+        }
+        return layout;
+    }
+
+    /** Replaces the saved tile span and order values with {@code layout}. */
+    public static void setTileLayout(Context context, Map<String, Integer> layout) {
+        final SharedPreferences prefs = prefs(context);
+        final SharedPreferences.Editor editor = prefs.edit();
+        for (String key : prefs.getAll().keySet()) {
+            if (isTileLayoutKey(key)) {
+                editor.remove(key);
+            }
+        }
+        for (Map.Entry<String, Integer> entry : layout.entrySet()) {
+            editor.putInt(entry.getKey(), entry.getValue());
+        }
+        editor.apply();
+    }
+
+    private static boolean isTileLayoutKey(String key) {
+        return key.startsWith(TILE_SPAN_PREFIX) || key.startsWith(TILE_ORDER_PREFIX);
+    }
+
     public static final class DataStore extends PreferenceDataStore {
 
         private final SharedPreferences mPrefs;

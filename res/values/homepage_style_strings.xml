@@ -267,4 +267,9 @@
     <string name="homepage_mock_security">App security, device lock, permissions</string>
     <string name="homepage_mock_location">On/4 apps have access to location</string>
     <string name="homepage_mock_accounts_backup">Back up data, copy data from another device</string>
+
+    <!-- Edit mode for the card layout. -->
+    <string name="homepage_edit_discard">Discard</string>
+    <string name="homepage_edit_reset">Reset</string>
+    <string name="homepage_edit_done">Done</string>
 </resources>
