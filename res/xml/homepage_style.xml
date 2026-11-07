@@ -71,6 +71,17 @@
             android:defaultValue="true" />
 
         <SwitchPreference
+            android:key="show_suggestions"
+            android:title="@string/homepage_style_show_suggestions_title"
+            android:summary="@string/homepage_style_show_suggestions_summary"
+            android:defaultValue="true" />
+
+        <SwitchPreference
+            android:key="show_inspiration"
+            android:title="@string/homepage_style_show_inspiration_title"
+            android:defaultValue="true" />
+
+        <SwitchPreference
             android:key="huge_greeting"
             android:title="@string/homepage_style_huge_greeting_title"
             android:summary="@string/homepage_style_huge_greeting_summary"

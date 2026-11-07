@@ -60,12 +60,16 @@ public final class HomepageStyleController {
     private final LinearLayout mHeader;
     private final TextView mGreeting;
     private final TextView mTitle;
+    private final TextView mSuggestionView;
+    private final TextView mInspirationView;
     private final ImageView mAvatar;
     private final boolean mAvatarSupported;
 
     // Values picked once per homepage creation so the random options stay stable while resumed.
     private final String mRandomGreeting;
     private final String mTimeGreeting;
+    private final String mSuggestion;
+    private final String mInspiration;
     private final int mRandomGreetingColour;
     private final int mRandomTitleColour;
 
@@ -89,6 +93,10 @@ public final class HomepageStyleController {
                 .getStringArray(R.array.homepage_style_greetings);
         mRandomGreeting = greetings[random.nextInt(greetings.length)];
         mTimeGreeting = pickTimeGreeting(random);
+        mSuggestion = pickSuggestion(random);
+        final String[] quotes = mContext.getResources()
+                .getStringArray(R.array.homepage_style_inspiration);
+        mInspiration = quotes[random.nextInt(quotes.length)];
         mRandomGreetingColour = randomColour(random);
         mRandomTitleColour = randomColour(random);
 
@@ -123,6 +131,19 @@ public final class HomepageStyleController {
         titleRow.addView(mAvatar, new LinearLayout.LayoutParams(dp(40), dp(40)));
 
         mHeader.addView(titleRow, new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        mSuggestionView = new TextView(activity);
+        mSuggestionView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+        mSuggestionView.setPadding(0, dp(8), 0, 0);
+        mHeader.addView(mSuggestionView, new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        mInspirationView = new TextView(activity);
+        mInspirationView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+        mInspirationView.setTypeface(null, Typeface.ITALIC);
+        mInspirationView.setPadding(0, dp(4), 0, 0);
+        mHeader.addView(mInspirationView, new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
         mHomepageContainer.addView(mHeader, 0, new LinearLayout.LayoutParams(
@@ -171,7 +192,20 @@ public final class HomepageStyleController {
 
         mAvatar.setVisibility(showAvatar ? View.VISIBLE : View.GONE);
 
-        final boolean anyVisible = showGreeting || showTitle || showAvatar;
+        final boolean showSuggestion = HomepageStyle.isShowSuggestions(mContext);
+        mSuggestionView.setText(mSuggestion);
+        mSuggestionView.setTextColor(defaultSecondaryColour());
+        mSuggestionView.setGravity(gravity);
+        mSuggestionView.setVisibility(showSuggestion ? View.VISIBLE : View.GONE);
+
+        final boolean showInspiration = HomepageStyle.isShowInspiration(mContext);
+        mInspirationView.setText(mInspiration);
+        mInspirationView.setTextColor(defaultSecondaryColour());
+        mInspirationView.setGravity(gravity);
+        mInspirationView.setVisibility(showInspiration ? View.VISIBLE : View.GONE);
+
+        final boolean anyVisible = showGreeting || showTitle || showAvatar
+                || showSuggestion || showInspiration;
         mHeader.setVisibility(anyVisible ? View.VISIBLE : View.GONE);
     }
 
@@ -295,6 +329,33 @@ public final class HomepageStyleController {
         }
         final String[] options = mContext.getResources().getStringArray(arrayRes);
         return options[random.nextInt(options.length)];
+    }
+
+    /** Picks a random tea, meal or work suggestion that suits the current time of day. */
+    private String pickSuggestion(Random random) {
+        final int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        final int arrayRes;
+        if (hour >= 5 && hour < 9) {
+            arrayRes = R.array.homepage_style_breakfast_suggestions;
+        } else if (hour >= 9 && hour < 12) {
+            arrayRes = R.array.homepage_style_work_suggestions;
+        } else if (hour >= 12 && hour < 14) {
+            arrayRes = R.array.homepage_style_lunch_suggestions;
+        } else if (hour >= 14 && hour < 17) {
+            arrayRes = R.array.homepage_style_tea_suggestions;
+        } else if (hour >= 17 && hour < 20) {
+            arrayRes = R.array.homepage_style_evening_suggestions;
+        } else if (hour >= 20 && hour < 23) {
+            arrayRes = R.array.homepage_style_dinner_suggestions;
+        } else {
+            arrayRes = R.array.homepage_style_rest_suggestions;
+        }
+        final String[] options = mContext.getResources().getStringArray(arrayRes);
+        return options[random.nextInt(options.length)];
+    }
+
+    private int defaultSecondaryColour() {
+        return Utils.getColorAttrDefaultColor(mContext, android.R.attr.textColorSecondary);
     }
 
     private String getDefaultGreeting() {

@@ -172,4 +172,56 @@
         <item>You\'ve got this</item>
         <item>Stay curious</item>
     </string-array>
+    <string name="homepage_style_show_suggestions_title">Tea, meal and work suggestions</string>
+    <string name="homepage_style_show_suggestions_summary">Suggestions change with the time of day</string>
+    <string name="homepage_style_show_inspiration_title">Show inspiration</string>
+
+    <string-array name="homepage_style_breakfast_suggestions">
+        <item>Start with a cup of tea ☕</item>
+        <item>Time for a healthy breakfast</item>
+        <item>Plan your top three tasks for today</item>
+    </string-array>
+    <string-array name="homepage_style_work_suggestions">
+        <item>Focus time: tackle your hardest task first</item>
+        <item>Take a short stretch every hour</item>
+        <item>Drink some water and keep going</item>
+    </string-array>
+    <string-array name="homepage_style_lunch_suggestions">
+        <item>Lunch time. Eat something filling 🍛</item>
+        <item>Take a proper break away from the screen</item>
+        <item>How about a light, balanced lunch?</item>
+    </string-array>
+    <string-array name="homepage_style_tea_suggestions">
+        <item>Tea break? A short walk helps too ☕</item>
+        <item>Snack time: pick something light and healthy</item>
+        <item>Stretch, breathe, then get back to it</item>
+    </string-array>
+    <string-array name="homepage_style_evening_suggestions">
+        <item>Wrap up and write tomorrow's to-do list</item>
+        <item>Evening tea? Something warm helps you unwind ☕</item>
+        <item>Set your work aside for a bit</item>
+    </string-array>
+    <string-array name="homepage_style_dinner_suggestions">
+        <item>Dinner time. Have a home-cooked meal 🍲</item>
+        <item>Eat slowly and enjoy your food</item>
+        <item>Keep dinner light and warm</item>
+    </string-array>
+    <string-array name="homepage_style_rest_suggestions">
+        <item>Time to rest. Put the phone down soon</item>
+        <item>Herbal tea before bed is a good idea 🍵</item>
+        <item>Your tomorrow self will thank you for sleep</item>
+    </string-array>
+
+    <string-array name="homepage_style_inspiration">
+        <item>Small steps add up to big progress.</item>
+        <item>Done is better than perfect.</item>
+        <item>Every day is a chance to begin again.</item>
+        <item>Be kind to yourself, you are doing your best.</item>
+        <item>The best time to start was yesterday. The next best time is now.</item>
+        <item>Focus on the next step, not the whole staircase.</item>
+        <item>Progress, not perfection.</item>
+        <item>Your effort today builds tomorrow.</item>
+        <item>Stay curious and keep learning.</item>
+        <item>Hard work quietly pays off.</item>
+    </string-array>
 </resources>
