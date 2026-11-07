@@ -17,6 +17,7 @@
 package com.android.settings.homepage.style;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.util.TypedValue;
@@ -39,6 +40,7 @@ import com.android.settings.accounts.AvatarViewMixin;
 import com.android.settings.homepage.SettingsHomepageActivity;
 import com.android.settingslib.Utils;
 import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.card.MaterialCardView;
 
 import java.util.Calendar;
 import java.util.Random;
@@ -78,6 +80,8 @@ public final class HomepageStyleController {
     @SuppressWarnings("rawtypes")
     private final CoordinatorLayout.Behavior mOriginalScrollBehavior;
     private boolean mBottomMode;
+    private final float mSearchRadius;
+    private final ColorStateList mSearchColour;
 
     public HomepageStyleController(SettingsHomepageActivity activity) {
         mContext = activity;
@@ -102,6 +106,14 @@ public final class HomepageStyleController {
 
         mOriginalAppBarParams = new CoordinatorLayout.LayoutParams(
                 (CoordinatorLayout.LayoutParams) mAppBar.getLayoutParams());
+        final View firstChild = mAppBarContainer.getChildAt(0);
+        if (firstChild instanceof MaterialCardView) {
+            mSearchRadius = ((MaterialCardView) firstChild).getRadius();
+            mSearchColour = ((MaterialCardView) firstChild).getCardBackgroundColor();
+        } else {
+            mSearchRadius = 0;
+            mSearchColour = null;
+        }
         mOriginalScrollBehavior = ((CoordinatorLayout.LayoutParams)
                 mScroll.getLayoutParams()).getBehavior();
 
@@ -214,30 +226,18 @@ public final class HomepageStyleController {
         mHeader.setVisibility(anyVisible ? View.VISIBLE : View.GONE);
     }
 
-    /** Card layout header: "Settings" with a subtitle, like the card mockup. */
+    /** Card layout: the header is replaced by the top search bar and the card list. */
     private void applyCardHeader() {
-        final boolean showTitle = HomepageStyle.isShowTitle(mContext);
-        final boolean showAvatar = mAvatarSupported && HomepageStyle.isShowAvatar(mContext);
-
-        mGreeting.setVisibility(View.GONE);
-        mInspirationView.setVisibility(View.GONE);
-        mTitle.setText(mContext.getString(R.string.homepage_style_cards_title));
-        mTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 32);
-        mTitle.setGravity(Gravity.START);
-        mTitle.setTextColor(defaultTextColour());
-        mTitle.setVisibility(showTitle ? View.VISIBLE : View.GONE);
-
-        mSuggestionView.setText(mContext.getString(R.string.homepage_style_cards_subtitle));
-        mSuggestionView.setTextColor(defaultSecondaryColour());
-        mSuggestionView.setGravity(Gravity.START);
-        mSuggestionView.setVisibility(View.VISIBLE);
-
-        mAvatar.setVisibility(showAvatar ? View.VISIBLE : View.GONE);
-        mHeader.setVisibility(View.VISIBLE);
+        mHeader.setVisibility(View.GONE);
     }
 
     private void applySearchBarPosition() {
-        final String position = HomepageStyle.getSearchBarPosition(mContext);
+        final boolean cards = HomepageStyle.isCardLayout(mContext);
+        final String stored = HomepageStyle.getSearchBarPosition(mContext);
+        // Card layout always shows the search bar at the top, as a pill (unless hidden).
+        final String position = cards && !HomepageStyle.POSITION_HIDDEN.equals(stored)
+                ? HomepageStyle.POSITION_TOP : stored;
+        applySearchPill(cards);
         final boolean inPage = HomepageStyle.POSITION_IN_PAGE.equals(position);
         final boolean bottom = HomepageStyle.POSITION_BOTTOM.equals(position);
         final boolean hidden = HomepageStyle.POSITION_HIDDEN.equals(position);
@@ -270,6 +270,23 @@ public final class HomepageStyleController {
 
         applyGlass(bottom && HomepageStyle.isGlassBottomBar(mContext));
         mRoot.requestLayout();
+    }
+
+    /** Turns the search card into a pill in card layout, and restores it otherwise. */
+    private void applySearchPill(boolean pill) {
+        if (!(mAppBarContainer.getChildAt(0) instanceof MaterialCardView)) {
+            return;
+        }
+        final MaterialCardView card = (MaterialCardView) mAppBarContainer.getChildAt(0);
+        if (pill) {
+            card.setRadius(dp(36));
+            card.setCardBackgroundColor(ColorStateList.valueOf(
+                    Utils.getColorAttrDefaultColor(mContext,
+                            android.R.attr.colorBackgroundFloating)));
+        } else {
+            card.setRadius(mSearchRadius);
+            card.setCardBackgroundColor(mSearchColour);
+        }
     }
 
     private void attachAppBarToRoot(CoordinatorLayout.LayoutParams params) {
