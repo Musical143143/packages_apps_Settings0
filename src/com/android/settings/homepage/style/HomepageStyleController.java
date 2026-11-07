@@ -40,6 +40,7 @@ import com.android.settings.homepage.SettingsHomepageActivity;
 import com.android.settingslib.Utils;
 import com.google.android.material.appbar.AppBarLayout;
 
+import java.util.Calendar;
 import java.util.Random;
 
 /**
@@ -153,10 +154,10 @@ public final class HomepageStyleController {
         final int gravity = getAlignmentGravity(HomepageStyle.getGreetingAlignment(mContext));
         mGreeting.setGravity(gravity);
         mTitle.setGravity(gravity);
-        mGreeting.setTextSize(TypedValue.COMPLEX_UNIT_SP,
-                HomepageStyle.getGreetingSize(mContext));
-        mGreeting.setText(HomepageStyle.isRandomGreetingWords(mContext)
-                ? mRandomGreeting : getDefaultGreeting());
+        mGreeting.setTextSize(TypedValue.COMPLEX_UNIT_SP, HomepageStyle.isHugeGreeting(mContext)
+                ? HomepageStyle.HUGE_GREETING_SIZE
+                : HomepageStyle.getGreetingSize(mContext));
+        mGreeting.setText(getGreetingText());
         mGreeting.setTextColor(HomepageStyle.isRandomGreetingColour(mContext)
                 ? mRandomGreetingColour : defaultTextColour());
         mGreeting.setVisibility(showGreeting ? View.VISIBLE : View.GONE);
@@ -267,6 +268,30 @@ public final class HomepageStyleController {
         final WindowInsetsCompat insets = ViewCompat.getRootWindowInsets(mRoot);
         return insets == null ? 0 : insets.getInsets(WindowInsetsCompat.Type.systemBars()
                 | WindowInsetsCompat.Type.displayCutout()).top;
+    }
+
+    private String getGreetingText() {
+        if (HomepageStyle.isTimeBasedGreeting(mContext)) {
+            return getTimeGreeting();
+        }
+        return HomepageStyle.isRandomGreetingWords(mContext)
+                ? mRandomGreeting : getDefaultGreeting();
+    }
+
+    /** Returns the greeting for the current time of day, e.g. "Good morning". */
+    private String getTimeGreeting() {
+        final int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        final int index;
+        if (hour >= 5 && hour < 12) {
+            index = 0;
+        } else if (hour >= 12 && hour < 17) {
+            index = 1;
+        } else if (hour >= 17 && hour < 21) {
+            index = 2;
+        } else {
+            index = 3;
+        }
+        return mContext.getResources().getStringArray(R.array.homepage_style_time_greetings)[index];
     }
 
     private String getDefaultGreeting() {

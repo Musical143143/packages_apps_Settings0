@@ -66,6 +66,17 @@
             android:defaultValue="true" />
 
         <SwitchPreference
+            android:key="time_based_greeting"
+            android:title="@string/homepage_style_time_based_greeting_title"
+            android:defaultValue="true" />
+
+        <SwitchPreference
+            android:key="huge_greeting"
+            android:title="@string/homepage_style_huge_greeting_title"
+            android:summary="@string/homepage_style_huge_greeting_summary"
+            android:defaultValue="true" />
+
+        <SwitchPreference
             android:key="random_greeting_words"
             android:title="@string/homepage_style_random_greeting_words_title"
             android:defaultValue="true" />

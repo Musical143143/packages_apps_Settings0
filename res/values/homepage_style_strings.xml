@@ -29,6 +29,9 @@
     <string name="homepage_style_show_title_title">Show title</string>
     <string name="homepage_style_show_avatar_title">Show avatar</string>
     <string name="homepage_style_show_greeting_title">Show greeting</string>
+    <string name="homepage_style_time_based_greeting_title">Time-based greeting</string>
+    <string name="homepage_style_huge_greeting_title">Huge greeting</string>
+    <string name="homepage_style_huge_greeting_summary">Shows the greeting in large text. Overrides greeting size</string>
     <string name="homepage_style_random_greeting_words_title">Random greeting words</string>
     <string name="homepage_style_random_greeting_colour_title">Random greeting colour</string>
     <string name="homepage_style_random_title_colour_title">Random title colour</string>
@@ -121,6 +124,13 @@
         <item>small</item>
         <item>normal</item>
         <item>large</item>
+    </string-array>
+
+    <string-array name="homepage_style_time_greetings">
+        <item>Good morning</item>
+        <item>Good afternoon</item>
+        <item>Good evening</item>
+        <item>Good night</item>
     </string-array>
 
     <string-array name="homepage_style_greetings">

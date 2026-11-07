@@ -42,6 +42,8 @@ public final class HomepageStyle {
     public static final String KEY_RANDOM_GREETING_COLOUR = "random_greeting_colour";
     public static final String KEY_RANDOM_TITLE_COLOUR = "random_title_colour";
     public static final String KEY_GREETING_SIZE = "greeting_size";
+    public static final String KEY_HUGE_GREETING = "huge_greeting";
+    public static final String KEY_TIME_BASED_GREETING = "time_based_greeting";
     public static final String KEY_GREETING_ALIGNMENT = "greeting_alignment";
     public static final String KEY_TILE_SPACING = "tile_spacing";
     public static final String KEY_TILE_ELEVATION = "tile_elevation";
@@ -71,6 +73,7 @@ public final class HomepageStyle {
 
     public static final String DEFAULT_HEADER_TITLE = "*THINK POSITIVE ⭐";
     public static final int DEFAULT_GREETING_SIZE = 29;
+    public static final int HUGE_GREETING_SIZE = 44;
     public static final int MIN_GREETING_SIZE = 20;
     public static final int MAX_GREETING_SIZE = 40;
 
@@ -125,6 +128,14 @@ public final class HomepageStyle {
 
     public static int getGreetingSize(Context context) {
         return prefs(context).getInt(KEY_GREETING_SIZE, DEFAULT_GREETING_SIZE);
+    }
+
+    public static boolean isHugeGreeting(Context context) {
+        return prefs(context).getBoolean(KEY_HUGE_GREETING, true);
+    }
+
+    public static boolean isTimeBasedGreeting(Context context) {
+        return prefs(context).getBoolean(KEY_TIME_BASED_GREETING, true);
     }
 
     public static String getGreetingAlignment(Context context) {
