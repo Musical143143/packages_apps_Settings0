@@ -19,6 +19,7 @@ package com.android.settings.homepage.style;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.Outline;
 import android.graphics.Typeface;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -174,7 +175,12 @@ public final class HomepageStyleController {
         mAvatar = new ImageView(activity);
         mAvatar.setScaleType(ImageView.ScaleType.CENTER_CROP);
         mAvatar.setClipToOutline(true);
-        mAvatar.setOutlineProvider(ViewOutlineProvider.OVAL);
+        mAvatar.setOutlineProvider(new ViewOutlineProvider() {
+            @Override
+            public void getOutline(View view, Outline outline) {
+                outline.setOval(0, 0, view.getWidth(), view.getHeight());
+            }
+        });
         titleRow.addView(mAvatar, new LinearLayout.LayoutParams(dp(40), dp(40)));
 
         mHeader.addView(titleRow, new LinearLayout.LayoutParams(
