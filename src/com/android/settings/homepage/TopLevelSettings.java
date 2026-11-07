@@ -50,6 +50,7 @@ import com.android.settings.activityembedding.ActivityEmbeddingUtils;
 import com.android.settings.core.RoundCornerPreferenceAdapter;
 import com.android.settings.core.SubSettingLauncher;
 import com.android.settings.dashboard.DashboardFragment;
+import com.android.settings.homepage.style.HomepageStyle;
 import com.android.settings.homepage.style.HomepageTileStyler;
 import com.android.settings.overlay.FeatureFactory;
 import com.android.settings.search.BaseSearchIndexProvider;
@@ -181,6 +182,37 @@ public class TopLevelSettings extends DashboardFragment implements SplitLayoutLi
             mActivityEmbeddingController = ActivityEmbeddingController.getInstance(getActivity());
         }
         return mActivityEmbeddingController.isActivityEmbedded(getActivity());
+    }
+
+    /** Keys shown only in the card layout, including their categories. */
+    private static final String[] CARD_ONLY_KEYS = {
+        "top_level_card_device_category", "top_level_card_device",
+        "top_level_card_quick_category", "top_level_card_quick_tiles",
+        "top_level_card_storage_category", "top_level_card_storage_battery",
+    };
+    /** Keys replaced by the card storage and battery tiles in the card layout. */
+    private static final String[] CLASSIC_ONLY_KEYS = {"top_level_storage", "top_level_battery"};
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateCardLayoutVisibility();
+    }
+
+    private void updateCardLayoutVisibility() {
+        final boolean cards = HomepageStyle.isCardLayout(getContext());
+        for (String key : CARD_ONLY_KEYS) {
+            final Preference pref = findPreference(key);
+            if (pref != null) {
+                pref.setVisible(cards);
+            }
+        }
+        for (String key : CLASSIC_ONLY_KEYS) {
+            final Preference pref = findPreference(key);
+            if (pref != null) {
+                pref.setVisible(!cards);
+            }
+        }
     }
 
     @Override

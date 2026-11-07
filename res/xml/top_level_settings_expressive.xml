@@ -36,6 +36,31 @@
         android:order="-150"
         android:key="top_level_account_category"/>
 
+    <!-- Card layout only; hidden unless the card layout is on. -->
+    <com.android.settingslib.widget.UntitledPreferenceCategory
+        android:order="-149"
+        android:key="top_level_card_device_category">
+        <com.android.settings.homepage.style.CardDevicePreference
+            android:key="top_level_card_device"
+            android:order="-149"/>
+    </com.android.settingslib.widget.UntitledPreferenceCategory>
+
+    <com.android.settingslib.widget.UntitledPreferenceCategory
+        android:order="-148"
+        android:key="top_level_card_quick_category">
+        <com.android.settings.homepage.style.CardQuickTilesPreference
+            android:key="top_level_card_quick_tiles"
+            android:order="-148"/>
+    </com.android.settingslib.widget.UntitledPreferenceCategory>
+
+    <com.android.settingslib.widget.UntitledPreferenceCategory
+        android:order="-115"
+        android:key="top_level_card_storage_category">
+        <com.android.settings.homepage.style.CardStorageBatteryPreference
+            android:key="top_level_card_storage_battery"
+            android:order="-115"/>
+    </com.android.settingslib.widget.UntitledPreferenceCategory>
+
     <com.android.settingslib.widget.UntitledPreferenceCategory
         android:order="-140"
         android:key="top_level_evolution_category">

@@ -232,4 +232,18 @@
     <item type="id" name="homepage_style_card_tag"/>
     <item type="id" name="homepage_style_original_bg_tag"/>
     <item type="id" name="homepage_style_card_key"/>
+    <string name="card_device_subtitle">Android %1$s</string>
+    <string name="card_device_pill">Security patch %1$s</string>
+    <string name="card_quick_wifi">Wi-Fi</string>
+    <string name="card_quick_bluetooth">Bluetooth</string>
+    <string name="card_quick_mobile_data">Mobile data</string>
+    <string name="card_quick_hotspot">Hotspot</string>
+    <string name="card_quick_on">On</string>
+    <string name="card_quick_off">Off</string>
+    <string name="card_quick_tap">Tap to open</string>
+    <string name="card_storage_title">Storage</string>
+    <string name="card_storage_subtitle">%1$d%% used · %2$s free</string>
+    <string name="card_battery_title">Battery</string>
+    <string name="card_battery_subtitle">%1$d%%</string>
+    <string name="card_battery_charging">%1$d%% · Charging</string>
 </resources>

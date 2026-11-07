@@ -133,7 +133,8 @@ public final class HomepageTileStyler {
             RecyclerView list) {
         final int position = list.getChildAdapterPosition(tile);
         final Preference pref = getPreference(list, position);
-        final boolean isRow = cards && pref != null && !(pref instanceof PreferenceCategory);
+        final boolean isRow = cards && pref != null && !(pref instanceof PreferenceCategory)
+                && !(pref instanceof CardLayoutPreference);
         if (!isRow) {
             restoreCard(tile);
             return;
@@ -274,7 +275,8 @@ public final class HomepageTileStyler {
     private static boolean isRowAt(RecyclerView list, int position) {
         final Preference pref = getPreference(list, position);
         return pref != null && !(pref instanceof PreferenceCategory)
-                && !(pref instanceof PreferenceGroup);
+                && !(pref instanceof PreferenceGroup)
+                && !(pref instanceof CardLayoutPreference);
     }
 
     private static int getSpacingDp(String spacing) {
