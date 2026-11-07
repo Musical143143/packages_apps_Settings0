@@ -224,4 +224,11 @@
         <item>Stay curious and keep learning.</item>
         <item>Hard work quietly pays off.</item>
     </string-array>
+    <string name="homepage_style_layout_category">Layout</string>
+    <string name="homepage_style_card_layout_title">Card layout</string>
+    <string name="homepage_style_card_layout_summary">Rounded cards that follow light and dark theme</string>
+    <string name="homepage_style_cards_title">Settings</string>
+    <string name="homepage_style_cards_subtitle">Customize your device</string>
+    <item type="id" name="homepage_style_card_tag"/>
+    <item type="id" name="homepage_style_original_bg_tag"/>
 </resources>

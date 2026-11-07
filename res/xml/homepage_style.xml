@@ -21,6 +21,17 @@
     android:title="@string/homepage_style_title">
 
     <PreferenceCategory
+        android:key="homepage_style_layout_category"
+        android:title="@string/homepage_style_layout_category">
+
+        <SwitchPreference
+            android:key="card_layout"
+            android:title="@string/homepage_style_card_layout_title"
+            android:summary="@string/homepage_style_card_layout_summary"
+            android:defaultValue="false" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
         android:key="homepage_style_search_category"
         android:title="@string/homepage_style_search_bar_title">
 

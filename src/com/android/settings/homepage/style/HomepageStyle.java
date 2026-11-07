@@ -43,6 +43,7 @@ public final class HomepageStyle {
     public static final String KEY_RANDOM_TITLE_COLOUR = "random_title_colour";
     public static final String KEY_GREETING_SIZE = "greeting_size";
     public static final String KEY_HUGE_GREETING = "huge_greeting";
+    public static final String KEY_CARD_LAYOUT = "card_layout";
     public static final String KEY_SHOW_SUGGESTIONS = "show_suggestions";
     public static final String KEY_SHOW_INSPIRATION = "show_inspiration";
     public static final String KEY_TIME_BASED_GREETING = "time_based_greeting";
@@ -134,6 +135,10 @@ public final class HomepageStyle {
 
     public static boolean isHugeGreeting(Context context) {
         return prefs(context).getBoolean(KEY_HUGE_GREETING, true);
+    }
+
+    public static boolean isCardLayout(Context context) {
+        return prefs(context).getBoolean(KEY_CARD_LAYOUT, false);
     }
 
     public static boolean isShowSuggestions(Context context) {

@@ -17,13 +17,21 @@
 package com.android.settings.homepage.style;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.RippleDrawable;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
 import android.widget.TextView;
 
+import androidx.core.graphics.ColorUtils;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.android.settings.R;
+import com.android.settingslib.Utils;
 
 /**
  * Applies the "Page style" tile options (spacing, elevation, title size, summaries) to the rows
@@ -43,9 +51,12 @@ public final class HomepageTileStyler {
                 getElevationDp(HomepageStyle.getTileElevation(context)));
         final float titleSp = getTitleSizeSp(HomepageStyle.getTileTitleSize(context));
         final boolean showSummaries = HomepageStyle.isTileShowSummaries(context);
+        final boolean cards = HomepageStyle.isCardLayout(context);
 
         for (int i = 0; i < list.getChildCount(); i++) {
-            applyToTile(list.getChildAt(i), context, spacing, elevation, titleSp, showSummaries);
+            final View tile = list.getChildAt(i);
+            applyToTile(tile, context, spacing, elevation, titleSp, showSummaries);
+            applyCardStyle(tile, context, cards);
         }
     }
 
@@ -83,6 +94,49 @@ public final class HomepageTileStyler {
                 summary.setVisibility(visibility);
             }
         }
+    }
+
+    /**
+     * Turns a row into a rounded card when card layout is on, and restores its original
+     * background when it is off. Rows that are not preferences (such as untitled categories)
+     * are left alone.
+     */
+    private static void applyCardStyle(View tile, Context context, boolean cards) {
+        final Object card = tile.getTag(R.id.homepage_style_card_tag);
+        final boolean isRow = tile.findViewById(R.id.icon_frame) != null;
+
+        if (!cards || !isRow) {
+            if (card != null && tile.getBackground() == card) {
+                tile.setBackground((Drawable) tile.getTag(R.id.homepage_style_original_bg_tag));
+            }
+            if (card != null) {
+                tile.setTag(R.id.homepage_style_card_tag, null);
+                tile.setTag(R.id.homepage_style_original_bg_tag, null);
+            }
+            return;
+        }
+
+        // Already styled and not rebound since, so nothing to do.
+        if (card != null && tile.getBackground() == card) {
+            return;
+        }
+
+        final float radius = dp(context, 20);
+        final GradientDrawable shape = new GradientDrawable();
+        shape.setShape(GradientDrawable.RECTANGLE);
+        shape.setCornerRadius(radius);
+        // Floating-surface colour follows the system light or dark theme.
+        final int surface = Utils.getColorAttrDefaultColor(context,
+                android.R.attr.colorBackgroundFloating);
+        shape.setColor(ColorUtils.setAlphaComponent(surface, 0xC8));
+        final int text = Utils.getColorAttrDefaultColor(context, android.R.attr.textColorPrimary);
+        shape.setStroke(Math.round(dp(context, 1)), ColorUtils.setAlphaComponent(text, 0x1F));
+
+        final RippleDrawable ripple = new RippleDrawable(
+                ColorStateList.valueOf(ColorUtils.setAlphaComponent(text, 0x1F)), shape, null);
+        tile.setTag(R.id.homepage_style_original_bg_tag, tile.getBackground());
+        tile.setTag(R.id.homepage_style_card_tag, ripple);
+        tile.setBackground(ripple);
     }
 
     private static int getSpacingDp(String spacing) {
