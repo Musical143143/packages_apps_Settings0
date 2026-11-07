@@ -98,7 +98,7 @@ public final class HomepageTileStyler {
         ROW_SUBTITLES.put("top_level_accounts_and_backup", R.string.homepage_mock_accounts_backup);
     }
     private static final int DEFAULT_ROW_COLOUR = 0xFF6366F1;
-    private static final int ICON_GLYPH_COLOUR = 0xFFFFFFFF;
+    private static final int ICON_RING_ALPHA = 0x40;
     private static final int LIGHT_CARD_FILL = 0xF0F5F2FF;
     private static final int ACCOUNT_BANNER_START = 0xFFEDE7FF;
     private static final int ACCOUNT_BANNER_END = 0xFFD6C8FF;
@@ -236,13 +236,20 @@ public final class HomepageTileStyler {
 
         final ImageView icon = tile.findViewById(android.R.id.icon);
         if (icon != null && !isAccount) {
-            final GradientDrawable circle = new GradientDrawable();
-            circle.setShape(GradientDrawable.OVAL);
-            circle.setColor(colour);
+            // Mockup icon: a dark tinted ring with a solid colour dot in the middle, no glyph.
+            final GradientDrawable ring = new GradientDrawable();
+            ring.setShape(GradientDrawable.OVAL);
+            ring.setColor(ColorUtils.setAlphaComponent(colour, ICON_RING_ALPHA));
+            final GradientDrawable dot = new GradientDrawable();
+            dot.setShape(GradientDrawable.OVAL);
+            dot.setColor(colour);
+            final LayerDrawable circle = new LayerDrawable(new Drawable[] {ring, dot});
+            final int inset = Math.round(dp(context, 10));
+            circle.setLayerInset(1, inset, inset, inset, inset);
             icon.setBackground(circle);
-            final int pad = Math.round(dp(context, 8));
-            icon.setPadding(pad, pad, pad, pad);
-            icon.setColorFilter(ICON_GLYPH_COLOUR, PorterDuff.Mode.SRC_IN);
+            icon.setPadding(0, 0, 0, 0);
+            // Hide the glyph so only the ring and dot show.
+            icon.setColorFilter(0x00000000, PorterDuff.Mode.SRC_IN);
             icon.setTag(R.id.homepage_style_card_tag, Boolean.TRUE);
         }
     }
