@@ -67,6 +67,7 @@ import com.android.settings.R;
 import com.android.settings.Settings;
 import com.android.settings.SettingsActivity;
 import com.android.settings.SettingsApplication;
+import com.android.settings.accounts.AvatarViewMixin;
 import com.android.settings.activityembedding.ActivityEmbeddingRulesController;
 import com.android.settings.activityembedding.ActivityEmbeddingUtils;
 import com.android.settings.activityembedding.EmbeddedDeepLinkUtils;
@@ -74,6 +75,7 @@ import com.android.settings.core.CategoryMixin;
 import com.android.settings.core.FeatureFlags;
 import com.android.settings.flags.Flags;
 import com.android.settings.homepage.contextualcards.ContextualCardsFragment;
+import com.android.settings.homepage.style.HomepageStyleController;
 import com.android.settings.overlay.FeatureFactory;
 import com.android.settings.safetycenter.SafetyCenterManagerWrapper;
 import com.android.settingslib.Utils;
@@ -121,6 +123,7 @@ public class SettingsHomepageActivity extends FragmentActivity implements
     private SplitControllerCallbackAdapter mSplitControllerAdapter;
     private SplitInfoCallback mCallback;
     private boolean mAllowUpdateSuggestion = true;
+    private HomepageStyleController mHomepageStyleController;
 
     /** A listener receiving homepage loaded events. */
     public interface HomepageLoadedListener {
@@ -262,6 +265,7 @@ public class SettingsHomepageActivity extends FragmentActivity implements
         mLoadedListeners = new ArraySet<>();
 
         initSearchBarView();
+        initHomepageStyle();
 
         getLifecycle().addObserver(new HideNonSystemOverlayMixin(this));
         mCategoryMixin = new CategoryMixin(this);
@@ -404,10 +408,32 @@ public class SettingsHomepageActivity extends FragmentActivity implements
                     container.setPadding(container.getPaddingLeft(), top_padding + insets.top,
                             container.getPaddingRight(), container.getPaddingBottom());
 
+                    // The "Page style" layout depends on the insets, so re-apply it.
+                    if (mHomepageStyleController != null) {
+                        mHomepageStyleController.apply();
+                    }
+
                     // Return CONSUMED if you don't want the window insets to keep being
                     // passed down to descendant views.
                     return WindowInsetsCompat.CONSUMED;
                 });
+    }
+
+    private void initHomepageStyle() {
+        mHomepageStyleController = new HomepageStyleController(this);
+        if (AvatarViewMixin.isAvatarSupported(this)) {
+            getLifecycle().addObserver(
+                    new AvatarViewMixin(this, mHomepageStyleController.getAvatarView()));
+        }
+        mHomepageStyleController.apply();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mHomepageStyleController != null) {
+            mHomepageStyleController.apply();
+        }
     }
 
     private void initSearchBarView() {

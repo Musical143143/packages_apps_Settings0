@@ -50,6 +50,7 @@ import com.android.settings.activityembedding.ActivityEmbeddingUtils;
 import com.android.settings.core.RoundCornerPreferenceAdapter;
 import com.android.settings.core.SubSettingLauncher;
 import com.android.settings.dashboard.DashboardFragment;
+import com.android.settings.homepage.style.HomepageTileStyler;
 import com.android.settings.overlay.FeatureFactory;
 import com.android.settings.search.BaseSearchIndexProvider;
 import com.android.settings.support.SupportPreferenceController;
@@ -253,6 +254,12 @@ public class TopLevelSettings extends DashboardFragment implements SplitLayoutLi
                 savedInstanceState);
         recyclerView.setVerticalScrollBarEnabled(false);
         recyclerView.setHorizontalScrollBarEnabled(false);
+
+        // Keep the "Page style" tile options applied to rows as they are bound and recycled.
+        recyclerView.getViewTreeObserver().addOnPreDrawListener(() -> {
+            HomepageTileStyler.applyToChildren(recyclerView);
+            return true;
+        });
 
         recyclerView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
             @Override

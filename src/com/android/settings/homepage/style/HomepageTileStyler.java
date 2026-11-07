@@ -1,0 +1,125 @@
+/*
+ * Copyright (C) 2026 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.android.settings.homepage.style;
+
+import android.content.Context;
+import android.util.TypedValue;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewOutlineProvider;
+import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
+
+/**
+ * Applies the "Page style" tile options (spacing, elevation, title size, summaries) to the rows
+ * of the homepage list. Each option is only written when it differs, so this is cheap to run on
+ * every frame and keeps rows correct after they are recycled or rebound.
+ */
+public final class HomepageTileStyler {
+
+    private HomepageTileStyler() {
+    }
+
+    /** Applies the current tile options to every row currently laid out in {@code list}. */
+    public static void applyToChildren(RecyclerView list) {
+        final Context context = list.getContext();
+        final float spacing = dp(context, getSpacingDp(HomepageStyle.getTileSpacing(context)));
+        final float elevation = dp(context,
+                getElevationDp(HomepageStyle.getTileElevation(context)));
+        final float titleSp = getTitleSizeSp(HomepageStyle.getTileTitleSize(context));
+        final boolean showSummaries = HomepageStyle.isTileShowSummaries(context);
+
+        for (int i = 0; i < list.getChildCount(); i++) {
+            applyToTile(list.getChildAt(i), context, spacing, elevation, titleSp, showSummaries);
+        }
+    }
+
+    private static void applyToTile(View tile, Context context, float spacing, float elevation,
+            float titleSp, boolean showSummaries) {
+        final int spacingPx = Math.round(spacing);
+        final ViewGroup.LayoutParams params = tile.getLayoutParams();
+        if (params instanceof ViewGroup.MarginLayoutParams) {
+            final ViewGroup.MarginLayoutParams margins = (ViewGroup.MarginLayoutParams) params;
+            if (margins.topMargin != spacingPx || margins.bottomMargin != spacingPx) {
+                margins.topMargin = spacingPx;
+                margins.bottomMargin = spacingPx;
+                tile.setLayoutParams(margins);
+            }
+        }
+
+        if (tile.getElevation() != elevation) {
+            tile.setOutlineProvider(ViewOutlineProvider.BACKGROUND);
+            tile.setElevation(elevation);
+        }
+
+        final TextView title = tile.findViewById(android.R.id.title);
+        if (title != null) {
+            final float targetPx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, titleSp,
+                    context.getResources().getDisplayMetrics());
+            if (Math.abs(title.getTextSize() - targetPx) > 0.5f) {
+                title.setTextSize(TypedValue.COMPLEX_UNIT_SP, titleSp);
+            }
+        }
+
+        final View summary = tile.findViewById(android.R.id.summary);
+        if (summary != null) {
+            final int visibility = showSummaries ? View.VISIBLE : View.GONE;
+            if (summary.getVisibility() != visibility) {
+                summary.setVisibility(visibility);
+            }
+        }
+    }
+
+    private static int getSpacingDp(String spacing) {
+        switch (spacing) {
+            case HomepageStyle.SPACING_COMPACT:
+                return 0;
+            case HomepageStyle.SPACING_COMFORTABLE:
+                return 4;
+            default:
+                return 8;
+        }
+    }
+
+    private static int getElevationDp(String elevation) {
+        switch (elevation) {
+            case HomepageStyle.ELEVATION_FLAT:
+                return 0;
+            case HomepageStyle.ELEVATION_RAISED:
+                return 2;
+            default:
+                return 6;
+        }
+    }
+
+    private static float getTitleSizeSp(String size) {
+        switch (size) {
+            case HomepageStyle.TITLE_SIZE_SMALL:
+                return 14f;
+            case HomepageStyle.TITLE_SIZE_LARGE:
+                return 18f;
+            default:
+                return 16f;
+        }
+    }
+
+    private static float dp(Context context, int value) {
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value,
+                context.getResources().getDisplayMetrics());
+    }
+}

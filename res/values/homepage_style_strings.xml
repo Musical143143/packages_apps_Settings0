@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2026 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+<resources>
+    <string name="homepage_style_entry_title">Page style</string>
+    <string name="homepage_style_entry_summary">Search bar, header, greeting and tile look</string>
+    <string name="homepage_style_title">Page style</string>
+
+    <string name="homepage_style_search_bar_title">Search bar</string>
+    <string name="homepage_style_search_bar_position_title">Search bar position</string>
+    <string name="homepage_style_glass_bottom_bar_title">Glass blur behind bottom bar</string>
+
+    <string name="homepage_style_header_category">Header</string>
+    <string name="homepage_style_header_title">Title</string>
+    <string name="homepage_style_header_title_dialog">Header title</string>
+    <string name="homepage_style_show_title_title">Show title</string>
+    <string name="homepage_style_show_avatar_title">Show avatar</string>
+    <string name="homepage_style_show_greeting_title">Show greeting</string>
+    <string name="homepage_style_random_greeting_words_title">Random greeting words</string>
+    <string name="homepage_style_random_greeting_colour_title">Random greeting colour</string>
+    <string name="homepage_style_random_title_colour_title">Random title colour</string>
+    <string name="homepage_style_greeting_size_title">Greeting size</string>
+    <string name="homepage_style_greeting_size_summary">%1$d sp</string>
+    <string name="homepage_style_greeting_alignment_title">Greeting alignment</string>
+
+    <string name="homepage_style_tiles_category">Tiles</string>
+    <string name="homepage_style_tile_spacing_title">Tile spacing</string>
+    <string name="homepage_style_tile_elevation_title">Tile elevation</string>
+    <string name="homepage_style_tile_title_size_title">Tile title size</string>
+    <string name="homepage_style_tile_show_summaries_title">Show summaries</string>
+
+    <string name="homepage_style_reset_title">Reset page style</string>
+    <string name="homepage_style_reset_summary">Restore the default look of the homepage</string>
+
+    <string name="homepage_style_position_top">Top</string>
+    <string name="homepage_style_position_bottom">Bottom</string>
+    <string name="homepage_style_position_in_page">In page</string>
+    <string name="homepage_style_position_hidden">Hidden</string>
+
+    <string name="homepage_style_align_left">Left</string>
+    <string name="homepage_style_align_center">Center</string>
+    <string name="homepage_style_align_right">Right</string>
+
+    <string name="homepage_style_spacing_compact">Compact</string>
+    <string name="homepage_style_spacing_comfortable">Comfortable</string>
+    <string name="homepage_style_spacing_spacious">Spacious</string>
+
+    <string name="homepage_style_elevation_flat">Flat</string>
+    <string name="homepage_style_elevation_raised">Raised</string>
+    <string name="homepage_style_elevation_lifted">Lifted</string>
+
+    <string name="homepage_style_title_size_small">Small</string>
+    <string name="homepage_style_title_size_normal">Normal</string>
+    <string name="homepage_style_title_size_large">Large</string>
+
+    <string-array name="homepage_style_position_entries">
+        <item>@string/homepage_style_position_top</item>
+        <item>@string/homepage_style_position_bottom</item>
+        <item>@string/homepage_style_position_in_page</item>
+        <item>@string/homepage_style_position_hidden</item>
+    </string-array>
+    <string-array name="homepage_style_position_values">
+        <item>top</item>
+        <item>bottom</item>
+        <item>in_page</item>
+        <item>hidden</item>
+    </string-array>
+
+    <string-array name="homepage_style_align_entries">
+        <item>@string/homepage_style_align_left</item>
+        <item>@string/homepage_style_align_center</item>
+        <item>@string/homepage_style_align_right</item>
+    </string-array>
+    <string-array name="homepage_style_align_values">
+        <item>left</item>
+        <item>center</item>
+        <item>right</item>
+    </string-array>
+
+    <string-array name="homepage_style_spacing_entries">
+        <item>@string/homepage_style_spacing_compact</item>
+        <item>@string/homepage_style_spacing_comfortable</item>
+        <item>@string/homepage_style_spacing_spacious</item>
+    </string-array>
+    <string-array name="homepage_style_spacing_values">
+        <item>compact</item>
+        <item>comfortable</item>
+        <item>spacious</item>
+    </string-array>
+
+    <string-array name="homepage_style_elevation_entries">
+        <item>@string/homepage_style_elevation_flat</item>
+        <item>@string/homepage_style_elevation_raised</item>
+        <item>@string/homepage_style_elevation_lifted</item>
+    </string-array>
+    <string-array name="homepage_style_elevation_values">
+        <item>flat</item>
+        <item>raised</item>
+        <item>lifted</item>
+    </string-array>
+
+    <string-array name="homepage_style_title_size_entries">
+        <item>@string/homepage_style_title_size_small</item>
+        <item>@string/homepage_style_title_size_normal</item>
+        <item>@string/homepage_style_title_size_large</item>
+    </string-array>
+    <string-array name="homepage_style_title_size_values">
+        <item>small</item>
+        <item>normal</item>
+        <item>large</item>
+    </string-array>
+
+    <string-array name="homepage_style_greetings">
+        <item>Have a great day</item>
+        <item>Hope your day is going…</item>
+        <item>Ready when you are</item>
+        <item>Let\'s get things done</item>
+        <item>Make today count</item>
+    </string-array>
+</resources>

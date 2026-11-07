@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2026 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:key="homepage_style"
+    android:title="@string/homepage_style_title">
+
+    <PreferenceCategory
+        android:key="homepage_style_search_category"
+        android:title="@string/homepage_style_search_bar_title">
+
+        <ListPreference
+            android:key="search_bar_position"
+            android:title="@string/homepage_style_search_bar_position_title"
+            android:entries="@array/homepage_style_position_entries"
+            android:entryValues="@array/homepage_style_position_values"
+            android:defaultValue="bottom"
+            android:persistent="true"
+            android:summary="%s" />
+
+        <SwitchPreference
+            android:key="glass_bottom_bar"
+            android:title="@string/homepage_style_glass_bottom_bar_title"
+            android:defaultValue="true" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="homepage_style_header_category"
+        android:title="@string/homepage_style_header_category">
+
+        <EditTextPreference
+            android:key="header_title"
+            android:title="@string/homepage_style_header_title"
+            android:dialogTitle="@string/homepage_style_header_title_dialog"
+            android:defaultValue="*THINK POSITIVE ⭐"
+            android:summary="%s" />
+
+        <SwitchPreference
+            android:key="show_title"
+            android:title="@string/homepage_style_show_title_title"
+            android:defaultValue="true" />
+
+        <SwitchPreference
+            android:key="show_avatar"
+            android:title="@string/homepage_style_show_avatar_title"
+            android:defaultValue="true" />
+
+        <SwitchPreference
+            android:key="show_greeting"
+            android:title="@string/homepage_style_show_greeting_title"
+            android:defaultValue="true" />
+
+        <SwitchPreference
+            android:key="random_greeting_words"
+            android:title="@string/homepage_style_random_greeting_words_title"
+            android:defaultValue="true" />
+
+        <SwitchPreference
+            android:key="random_greeting_colour"
+            android:title="@string/homepage_style_random_greeting_colour_title"
+            android:defaultValue="true" />
+
+        <SwitchPreference
+            android:key="random_title_colour"
+            android:title="@string/homepage_style_random_title_colour_title"
+            android:defaultValue="true" />
+
+        <SeekBarPreference
+            android:key="greeting_size"
+            android:title="@string/homepage_style_greeting_size_title"
+            android:defaultValue="29"
+            android:max="40"
+            app:min="20"
+            app:showSeekBarValue="true" />
+
+        <ListPreference
+            android:key="greeting_alignment"
+            android:title="@string/homepage_style_greeting_alignment_title"
+            android:entries="@array/homepage_style_align_entries"
+            android:entryValues="@array/homepage_style_align_values"
+            android:defaultValue="left"
+            android:summary="%s" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="homepage_style_tiles_category"
+        android:title="@string/homepage_style_tiles_category">
+
+        <ListPreference
+            android:key="tile_spacing"
+            android:title="@string/homepage_style_tile_spacing_title"
+            android:entries="@array/homepage_style_spacing_entries"
+            android:entryValues="@array/homepage_style_spacing_values"
+            android:defaultValue="spacious"
+            android:summary="%s" />
+
+        <ListPreference
+            android:key="tile_elevation"
+            android:title="@string/homepage_style_tile_elevation_title"
+            android:entries="@array/homepage_style_elevation_entries"
+            android:entryValues="@array/homepage_style_elevation_values"
+            android:defaultValue="lifted"
+            android:summary="%s" />
+
+        <ListPreference
+            android:key="tile_title_size"
+            android:title="@string/homepage_style_tile_title_size_title"
+            android:entries="@array/homepage_style_title_size_entries"
+            android:entryValues="@array/homepage_style_title_size_values"
+            android:defaultValue="normal"
+            android:summary="%s" />
+
+        <SwitchPreference
+            android:key="tile_show_summaries"
+            android:title="@string/homepage_style_tile_show_summaries_title"
+            android:defaultValue="true" />
+    </PreferenceCategory>
+
+    <Preference
+        android:key="homepage_style_reset"
+        android:title="@string/homepage_style_reset_title"
+        android:summary="@string/homepage_style_reset_summary" />
+</PreferenceScreen>

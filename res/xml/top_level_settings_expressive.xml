@@ -21,6 +21,18 @@
     android:key="top_level_settings">
 
     <com.android.settingslib.widget.UntitledPreferenceCategory
+        android:order="-170"
+        android:key="top_level_page_style_category">
+        <com.android.settings.widget.HomepagePreference
+            android:fragment="com.android.settings.homepage.style.HomepageStyleFragment"
+            android:icon="@drawable/ic_homepage_wallpaper"
+            android:key="top_level_page_style"
+            android:order="-170"
+            android:title="@string/homepage_style_entry_title"
+            android:summary="@string/homepage_style_entry_summary"/>
+    </com.android.settingslib.widget.UntitledPreferenceCategory>
+
+    <com.android.settingslib.widget.UntitledPreferenceCategory
         android:order="-150"
         android:key="top_level_account_category"/>
 
