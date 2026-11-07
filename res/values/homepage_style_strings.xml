@@ -126,18 +126,50 @@
         <item>large</item>
     </string-array>
 
-    <string-array name="homepage_style_time_greetings">
+    <string-array name="homepage_style_morning_greetings">
         <item>Good morning</item>
+        <item>Rise and shine</item>
+        <item>Morning! Ready when you are</item>
+        <item>Hello, sunshine</item>
+        <item>Fresh start, new day</item>
+    </string-array>
+
+    <string-array name="homepage_style_afternoon_greetings">
         <item>Good afternoon</item>
+        <item>Hope your afternoon is going well</item>
+        <item>Keep it up this afternoon</item>
+        <item>Afternoon! Let\'s get things done</item>
+        <item>Halfway through the day</item>
+    </string-array>
+
+    <string-array name="homepage_style_evening_greetings">
         <item>Good evening</item>
+        <item>Hope your evening is relaxing</item>
+        <item>Wind down, you did well today</item>
+        <item>Evening! Time to take it easy</item>
+        <item>Nice work today</item>
+    </string-array>
+
+    <string-array name="homepage_style_night_greetings">
         <item>Good night</item>
+        <item>Still up? Sleep well soon</item>
+        <item>Rest well tonight</item>
+        <item>Late night, take care of yourself</item>
+        <item>Sweet dreams</item>
     </string-array>
 
     <string-array name="homepage_style_greetings">
         <item>Have a great day</item>
-        <item>Hope your day is going…</item>
+        <item>Hope your day is going\u2026</item>
         <item>Ready when you are</item>
         <item>Let\'s get things done</item>
         <item>Make today count</item>
+        <item>Let\'s make it a good one</item>
+        <item>Welcome back</item>
+        <item>Good to see you</item>
+        <item>What will you do today?</item>
+        <item>Small steps, big wins</item>
+        <item>You\'ve got this</item>
+        <item>Stay curious</item>
     </string-array>
 </resources>

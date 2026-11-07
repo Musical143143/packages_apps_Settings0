@@ -65,6 +65,7 @@ public final class HomepageStyleController {
 
     // Values picked once per homepage creation so the random options stay stable while resumed.
     private final String mRandomGreeting;
+    private final String mTimeGreeting;
     private final int mRandomGreetingColour;
     private final int mRandomTitleColour;
 
@@ -87,6 +88,7 @@ public final class HomepageStyleController {
         final String[] greetings = mContext.getResources()
                 .getStringArray(R.array.homepage_style_greetings);
         mRandomGreeting = greetings[random.nextInt(greetings.length)];
+        mTimeGreeting = pickTimeGreeting(random);
         mRandomGreetingColour = randomColour(random);
         mRandomTitleColour = randomColour(random);
 
@@ -272,26 +274,27 @@ public final class HomepageStyleController {
 
     private String getGreetingText() {
         if (HomepageStyle.isTimeBasedGreeting(mContext)) {
-            return getTimeGreeting();
+            return mTimeGreeting;
         }
         return HomepageStyle.isRandomGreetingWords(mContext)
                 ? mRandomGreeting : getDefaultGreeting();
     }
 
-    /** Returns the greeting for the current time of day, e.g. "Good morning". */
-    private String getTimeGreeting() {
+    /** Picks a random greeting that suits the current time of day. */
+    private String pickTimeGreeting(Random random) {
         final int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-        final int index;
+        final int arrayRes;
         if (hour >= 5 && hour < 12) {
-            index = 0;
+            arrayRes = R.array.homepage_style_morning_greetings;
         } else if (hour >= 12 && hour < 17) {
-            index = 1;
+            arrayRes = R.array.homepage_style_afternoon_greetings;
         } else if (hour >= 17 && hour < 21) {
-            index = 2;
+            arrayRes = R.array.homepage_style_evening_greetings;
         } else {
-            index = 3;
+            arrayRes = R.array.homepage_style_night_greetings;
         }
-        return mContext.getResources().getStringArray(R.array.homepage_style_time_greetings)[index];
+        final String[] options = mContext.getResources().getStringArray(arrayRes);
+        return options[random.nextInt(options.length)];
     }
 
     private String getDefaultGreeting() {
