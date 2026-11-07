@@ -187,6 +187,7 @@ public final class HomepageStyleController {
             return;
         }
         mTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
+        mTitle.setTypeface(null, Typeface.BOLD);
         final boolean showGreeting = HomepageStyle.isShowGreeting(mContext);
         final boolean showTitle = HomepageStyle.isShowTitle(mContext);
         final boolean showAvatar = mAvatarSupported && HomepageStyle.isShowAvatar(mContext);
@@ -226,9 +227,25 @@ public final class HomepageStyleController {
         mHeader.setVisibility(anyVisible ? View.VISIBLE : View.GONE);
     }
 
-    /** Card layout: the header is replaced by the top search bar and the card list. */
+    /** Card layout header: large "Settings" title with a subtitle, like the mockup. */
     private void applyCardHeader() {
-        mHeader.setVisibility(View.GONE);
+        mGreeting.setVisibility(View.GONE);
+        mInspirationView.setVisibility(View.GONE);
+        mAvatar.setVisibility(View.GONE);
+
+        mTitle.setText(mContext.getString(R.string.homepage_style_cards_title));
+        mTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 34);
+        mTitle.setTypeface(null, Typeface.BOLD);
+        mTitle.setGravity(Gravity.START);
+        mTitle.setTextColor(defaultTextColour());
+        mTitle.setVisibility(HomepageStyle.isShowTitle(mContext) ? View.VISIBLE : View.GONE);
+
+        mSuggestionView.setText(mContext.getString(R.string.homepage_style_cards_subtitle));
+        mSuggestionView.setTextColor(defaultSecondaryColour());
+        mSuggestionView.setGravity(Gravity.START);
+        mSuggestionView.setVisibility(View.VISIBLE);
+
+        mHeader.setVisibility(View.VISIBLE);
     }
 
     private void applySearchBarPosition() {

@@ -19,6 +19,7 @@ package com.android.settings.homepage.style;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.PorterDuff;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.RippleDrawable;
@@ -51,12 +52,14 @@ public final class HomepageTileStyler {
     private static final int CORNER_BOTTOM = 2;
     private static final int CARD_CORNER_DP = 20;
 
-    // Pastel icon circles used by the card layout, cycled by row position.
+    // Icon colours used by the card layout, cycled by row position. Each icon sits in a light
+    // tint of its colour, like the pastel circles in the mockup.
     private static final int[] ICON_COLOURS = {
-        0xFF5BC8F0, 0xFFF58AD6, 0xFF5ED47A, 0xFFF9A96B,
-        0xFFF5C518, 0xFFB58CF5, 0xFF3CC8C8, 0xFFF48C8C,
+        0xFF3B82F6, 0xFF8B5CF6, 0xFF22C55E, 0xFFF97316,
+        0xFFEC4899, 0xFF14B8A6, 0xFFEF4444, 0xFF6366F1,
     };
-    private static final int ICON_GLYPH_COLOUR = 0xFF1C1B1F;
+    private static final int ICON_TINT_ALPHA = 0x33;
+    private static final int LIGHT_CARD_FILL = 0xF0F5F2FF;
 
     private HomepageTileStyler() {
     }
@@ -158,6 +161,10 @@ public final class HomepageTileStyler {
                 shapeDrawable, null);
         tile.setBackground(ripple);
         tile.setTag(R.id.homepage_style_card_tag, ripple);
+        final TextView title = tile.findViewById(android.R.id.title);
+        if (title != null) {
+            title.setTypeface(null, Typeface.BOLD);
+        }
         tile.setTag(R.id.homepage_style_card_key, key);
 
         // Rows inside a group touch each other; groups are separated by the spacing.
@@ -177,11 +184,12 @@ public final class HomepageTileStyler {
         if (icon != null && !isAccount) {
             final GradientDrawable circle = new GradientDrawable();
             circle.setShape(GradientDrawable.OVAL);
-            circle.setColor(ICON_COLOURS[colourIndex]);
+            circle.setColor(ColorUtils.setAlphaComponent(ICON_COLOURS[colourIndex],
+                    ICON_TINT_ALPHA));
             icon.setBackground(circle);
             final int pad = Math.round(dp(context, 8));
             icon.setPadding(pad, pad, pad, pad);
-            icon.setColorFilter(ICON_GLYPH_COLOUR, PorterDuff.Mode.SRC_IN);
+            icon.setColorFilter(ICON_COLOURS[colourIndex], PorterDuff.Mode.SRC_IN);
             icon.setTag(R.id.homepage_style_card_tag, Boolean.TRUE);
         }
     }
@@ -206,8 +214,11 @@ public final class HomepageTileStyler {
         shape.setShape(GradientDrawable.RECTANGLE);
         shape.setCornerRadii(radii);
         // The floating-surface colour follows the system light or dark theme.
-        shape.setColor(Utils.getColorAttrDefaultColor(context,
-                android.R.attr.colorBackgroundFloating));
+        final int surface = Utils.getColorAttrDefaultColor(context,
+                android.R.attr.colorBackgroundFloating);
+        // Light theme gets the lavender-white card from the mockup; dark keeps the surface.
+        shape.setColor(ColorUtils.calculateLuminance(surface) > 0.5
+                ? LIGHT_CARD_FILL : surface);
         final int text = Utils.getColorAttrDefaultColor(context, android.R.attr.textColorPrimary);
         shape.setStroke(Math.round(dp(context, 1)), ColorUtils.setAlphaComponent(text, 0x14));
         return shape;
@@ -225,6 +236,11 @@ public final class HomepageTileStyler {
         tile.setTag(R.id.homepage_style_card_tag, null);
         tile.setTag(R.id.homepage_style_card_key, null);
         tile.setTag(R.id.homepage_style_original_bg_tag, null);
+
+        final TextView title = tile.findViewById(android.R.id.title);
+        if (title != null) {
+            title.setTypeface(null, Typeface.NORMAL);
+        }
 
         final ImageView icon = tile.findViewById(android.R.id.icon);
         if (icon != null && icon.getTag(R.id.homepage_style_card_tag) != null) {
