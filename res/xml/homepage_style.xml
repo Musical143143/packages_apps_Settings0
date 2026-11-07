@@ -113,13 +113,13 @@
             android:title="@string/homepage_style_random_title_colour_title"
             android:defaultValue="true" />
 
-        <SeekBarPreference
+        <com.android.settings.widget.SeekBarPreference
             android:key="greeting_size"
             android:title="@string/homepage_style_greeting_size_title"
             android:defaultValue="29"
+            android:min="20"
             android:max="40"
-            app:min="20"
-            app:showSeekBarValue="true" />
+            android:selectable="false" />
 
         <ListPreference
             android:key="greeting_alignment"
