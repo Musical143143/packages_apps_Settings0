@@ -246,4 +246,8 @@
     <string name="card_battery_title">Battery</string>
     <string name="card_battery_subtitle">%1$d%%</string>
     <string name="card_battery_charging">%1$d%% · Charging</string>
+    <string name="card_quick_connected">Connected</string>
+    <string name="card_quick_airplane">Airplane mode</string>
+    <string name="card_quick_location">Location</string>
+    <string name="card_quick_dnd">Do not disturb</string>
 </resources>

@@ -19,11 +19,13 @@ package com.android.settings.homepage.style;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.LayerDrawable;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.RippleDrawable;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
@@ -161,7 +163,7 @@ public final class HomepageTileStyler {
         final int text = Utils.getColorAttrDefaultColor(context, android.R.attr.textColorPrimary);
         final RippleDrawable ripple = new RippleDrawable(
                 ColorStateList.valueOf(ColorUtils.setAlphaComponent(text, 0x1F)),
-                shapeDrawable, null);
+                withArtwork(context, pref, isAccount, shapeDrawable), null);
         tile.setBackground(ripple);
         tile.setTag(R.id.homepage_style_card_tag, ripple);
         final TextView title = tile.findViewById(android.R.id.title);
@@ -195,6 +197,46 @@ public final class HomepageTileStyler {
             icon.setColorFilter(ICON_COLOURS[colourIndex], PorterDuff.Mode.SRC_IN);
             icon.setTag(R.id.homepage_style_card_tag, Boolean.TRUE);
         }
+    }
+
+    /**
+     * Adds the artwork from the mockup to the rows that have it: the account banner, the Evolver
+     * wave and the wallpaper thumbnail. Other rows keep the plain card.
+     */
+    private static Drawable withArtwork(Context context, Preference pref, boolean isAccount,
+            Drawable shape) {
+        final int artRes;
+        final int width;
+        final int height;
+        final int gravity;
+        if (isAccount) {
+            artRes = R.drawable.card_mountain;
+            width = 240;
+            height = 96;
+            gravity = Gravity.BOTTOM | Gravity.END;
+        } else if ("top_level_evolver".equals(pref.getKey())) {
+            artRes = R.drawable.card_wave;
+            width = 160;
+            height = 60;
+            gravity = Gravity.BOTTOM | Gravity.END;
+        } else if ("top_level_wallpaper".equals(pref.getKey())) {
+            artRes = R.drawable.card_wallpaper_thumb;
+            width = 64;
+            height = 44;
+            gravity = Gravity.CENTER_VERTICAL | Gravity.END;
+        } else {
+            return shape;
+        }
+        final LayerDrawable layers = new LayerDrawable(
+                new Drawable[] {shape, context.getDrawable(artRes)});
+        layers.setLayerWidth(1, Math.round(dp(context, width)));
+        layers.setLayerHeight(1, Math.round(dp(context, height)));
+        layers.setLayerGravity(1, gravity);
+        if (artRes == R.drawable.card_wallpaper_thumb) {
+            // Keep the thumbnail clear of the chevron on the right.
+            layers.setLayerInsetEnd(1, Math.round(dp(context, 48)));
+        }
+        return layers;
     }
 
     private static GradientDrawable buildCardShape(Context context, boolean groupTop,

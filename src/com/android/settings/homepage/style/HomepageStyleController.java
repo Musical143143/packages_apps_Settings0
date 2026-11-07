@@ -83,6 +83,10 @@ public final class HomepageStyleController {
     private final float mSearchRadius;
     private final ColorStateList mSearchColour;
     private final LinearLayout.LayoutParams mSearchParams;
+    private final MaterialCardView mSearchCard;
+    private final LinearLayout mCardBlock;
+    private final TextView mCardTitle;
+    private final TextView mCardSubtitle;
     private final int mSearchMinHeight;
     private final int mSearchPaddingH;
 
@@ -110,6 +114,8 @@ public final class HomepageStyleController {
         mOriginalAppBarParams = new CoordinatorLayout.LayoutParams(
                 (CoordinatorLayout.LayoutParams) mAppBar.getLayoutParams());
         final View firstChild = mAppBarContainer.getChildAt(0);
+        mSearchCard = firstChild instanceof MaterialCardView
+                ? (MaterialCardView) firstChild : null;
         if (firstChild instanceof MaterialCardView) {
             final MaterialCardView card = (MaterialCardView) firstChild;
             mSearchRadius = card.getRadius();
@@ -126,6 +132,23 @@ public final class HomepageStyleController {
             mSearchMinHeight = 0;
             mSearchPaddingH = 0;
         }
+        // Card layout title, placed beside the round search button in the app bar.
+        mCardBlock = new LinearLayout(activity);
+        mCardBlock.setOrientation(LinearLayout.VERTICAL);
+        mCardBlock.setGravity(Gravity.CENTER_VERTICAL);
+        mCardTitle = new TextView(activity);
+        mCardTitle.setTypeface(null, Typeface.BOLD);
+        mCardTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 34);
+        mCardBlock.addView(mCardTitle, new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        mCardSubtitle = new TextView(activity);
+        mCardSubtitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+        mCardBlock.addView(mCardSubtitle, new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        mCardBlock.setVisibility(View.GONE);
+        mAppBarContainer.addView(mCardBlock, 0, new LinearLayout.LayoutParams(
+                0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+
         mOriginalScrollBehavior = ((CoordinatorLayout.LayoutParams)
                 mScroll.getLayoutParams()).getBehavior();
 
@@ -194,6 +217,7 @@ public final class HomepageStyleController {
     }
 
     private void applyHeader() {
+        mCardBlock.setVisibility(View.GONE);
         if (HomepageStyle.isCardLayout(mContext)) {
             applyCardHeader();
             return;
@@ -239,25 +263,22 @@ public final class HomepageStyleController {
         mHeader.setVisibility(anyVisible ? View.VISIBLE : View.GONE);
     }
 
-    /** Card layout header: large "Settings" title with a subtitle, like the mockup. */
+    /**
+     * Card layout header: the "Settings" title and subtitle sit beside the round search button
+     * in the app bar, and the scrolling header is hidden.
+     */
     private void applyCardHeader() {
-        mGreeting.setVisibility(View.GONE);
-        mInspirationView.setVisibility(View.GONE);
-        mAvatar.setVisibility(View.GONE);
+        mHeader.setVisibility(View.GONE);
+        mCardBlock.setVisibility(View.VISIBLE);
+        mCardBlock.setPadding(dp(8), 0, dp(8), 0);
 
-        mTitle.setText(mContext.getString(R.string.homepage_style_cards_title));
-        mTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 34);
-        mTitle.setTypeface(null, Typeface.BOLD);
-        mTitle.setGravity(Gravity.START);
-        mTitle.setTextColor(defaultTextColour());
-        mTitle.setVisibility(HomepageStyle.isShowTitle(mContext) ? View.VISIBLE : View.GONE);
+        mCardTitle.setText(mContext.getString(R.string.homepage_style_cards_title));
+        mCardTitle.setTextColor(defaultTextColour());
+        mCardTitle.setVisibility(HomepageStyle.isShowTitle(mContext) ? View.VISIBLE : View.GONE);
 
-        mSuggestionView.setText(mContext.getString(R.string.homepage_style_cards_subtitle));
-        mSuggestionView.setTextColor(defaultSecondaryColour());
-        mSuggestionView.setGravity(Gravity.START);
-        mSuggestionView.setVisibility(View.VISIBLE);
-
-        mHeader.setVisibility(View.VISIBLE);
+        mCardSubtitle.setText(mContext.getString(R.string.homepage_style_cards_subtitle));
+        mCardSubtitle.setTextColor(defaultSecondaryColour());
+        mCardSubtitle.setVisibility(View.VISIBLE);
     }
 
     private void applySearchBarPosition() {
@@ -306,10 +327,10 @@ public final class HomepageStyleController {
      * is restored to the full-width search bar.
      */
     private void applySearchPill(boolean round) {
-        if (!(mAppBarContainer.getChildAt(0) instanceof MaterialCardView)) {
+        if (mSearchCard == null) {
             return;
         }
-        final MaterialCardView card = (MaterialCardView) mAppBarContainer.getChildAt(0);
+        final MaterialCardView card = mSearchCard;
         final View inner = card.findViewById(R.id.search_action_bar);
         final View title = card.findViewById(R.id.search_bar_title);
         if (round) {
