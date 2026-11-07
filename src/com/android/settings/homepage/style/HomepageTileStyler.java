@@ -42,6 +42,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.settings.R;
 import com.android.settingslib.Utils;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Applies the "Page style" tile options to the rows of the homepage list: spacing, elevation,
  * title size, summaries, and the optional card layout. Each option is only written when it
@@ -54,13 +57,48 @@ public final class HomepageTileStyler {
     private static final int CORNER_BOTTOM = 2;
     private static final int CARD_CORNER_DP = 20;
 
-    // Icon colours used by the card layout, cycled by row position. Each icon sits in a light
-    // tint of its colour, like the pastel circles in the mockup.
-    private static final int[] ICON_COLOURS = {
-        0xFF3B82F6, 0xFF8B5CF6, 0xFF22C55E, 0xFFF97316,
-        0xFFEC4899, 0xFF14B8A6, 0xFFEF4444, 0xFF6366F1,
-    };
-    private static final int ICON_TINT_ALPHA = 0x33;
+    // Icon circle colour for each row, as in the mockup. Rows not listed use the default.
+    private static final Map<String, Integer> ROW_COLOURS = new HashMap<>();
+    // Subtitle text for each row in the card layout, as in the mockup.
+    private static final Map<String, Integer> ROW_SUBTITLES = new HashMap<>();
+    static {
+        ROW_COLOURS.put("top_level_page_style", 0xFF8B5CF6);
+        ROW_COLOURS.put("top_level_evolver", 0xFF8B5CF6);
+        ROW_COLOURS.put("top_level_network", 0xFFF97316);
+        ROW_COLOURS.put("top_level_connected_devices", 0xFFEC4899);
+        ROW_COLOURS.put("top_level_apps", 0xFFEF4444);
+        ROW_COLOURS.put("top_level_notifications", 0xFF6366F1);
+        ROW_COLOURS.put("top_level_sound", 0xFF3B82F6);
+        ROW_COLOURS.put("top_level_priority_modes", 0xFF8B5CF6);
+        ROW_COLOURS.put("top_level_display", 0xFF22C55E);
+        ROW_COLOURS.put("top_level_wallpaper", 0xFFF97316);
+        ROW_COLOURS.put("top_level_system", 0xFF3B82F6);
+        ROW_COLOURS.put("top_level_about_device", 0xFF8B5CF6);
+        ROW_COLOURS.put("top_level_security", 0xFFF97316);
+        ROW_COLOURS.put("top_level_location", 0xFFEC4899);
+        ROW_COLOURS.put("top_level_accounts_and_backup", 0xFFEF4444);
+        ROW_COLOURS.put("top_level_storage", 0xFF8B5CF6);
+        ROW_COLOURS.put("top_level_battery", 0xFF22C55E);
+        ROW_COLOURS.put("top_level_safety_center", 0xFF14B8A6);
+
+        ROW_SUBTITLES.put("top_level_page_style", R.string.homepage_mock_page_style);
+        ROW_SUBTITLES.put("top_level_evolver", R.string.homepage_mock_evolver);
+        ROW_SUBTITLES.put("top_level_network", R.string.homepage_mock_network);
+        ROW_SUBTITLES.put("top_level_connected_devices", R.string.homepage_mock_connected_devices);
+        ROW_SUBTITLES.put("top_level_apps", R.string.homepage_mock_apps);
+        ROW_SUBTITLES.put("top_level_notifications", R.string.homepage_mock_notifications);
+        ROW_SUBTITLES.put("top_level_sound", R.string.homepage_mock_sound);
+        ROW_SUBTITLES.put("top_level_priority_modes", R.string.homepage_mock_modes);
+        ROW_SUBTITLES.put("top_level_display", R.string.homepage_mock_display);
+        ROW_SUBTITLES.put("top_level_wallpaper", R.string.homepage_mock_wallpaper);
+        ROW_SUBTITLES.put("top_level_system", R.string.homepage_mock_system);
+        ROW_SUBTITLES.put("top_level_about_device", R.string.homepage_mock_about);
+        ROW_SUBTITLES.put("top_level_security", R.string.homepage_mock_security);
+        ROW_SUBTITLES.put("top_level_location", R.string.homepage_mock_location);
+        ROW_SUBTITLES.put("top_level_accounts_and_backup", R.string.homepage_mock_accounts_backup);
+    }
+    private static final int DEFAULT_ROW_COLOUR = 0xFF6366F1;
+    private static final int ICON_GLYPH_COLOUR = 0xFFFFFFFF;
     private static final int LIGHT_CARD_FILL = 0xF0F5F2FF;
     private static final int ACCOUNT_BANNER_START = 0xFFEDE7FF;
     private static final int ACCOUNT_BANNER_END = 0xFFD6C8FF;
@@ -146,13 +184,24 @@ public final class HomepageTileStyler {
                 && ACCOUNT_CATEGORY_KEY.equals(pref.getParent().getKey());
         final boolean groupTop = !isRowAt(list, position - 1);
         final boolean groupBottom = !isRowAt(list, position + 1);
-        final int colourIndex = Math.abs(position) % ICON_COLOURS.length;
-        final int key = (groupTop ? CORNER_TOP : 0) | (groupBottom ? CORNER_BOTTOM : 0)
-                | (isAccount ? 4 : 0) | (colourIndex << 3);
+        final String rowKey = pref.getKey() == null ? "" : pref.getKey();
+        final int colour = ROW_COLOURS.containsKey(rowKey)
+                ? ROW_COLOURS.get(rowKey) : DEFAULT_ROW_COLOUR;
+        final String key = groupTop + ":" + groupBottom + ":" + isAccount + ":" + colour
+                + ":" + rowKey;
+
+        final TextView subtitle = tile.findViewById(android.R.id.summary);
+        final Integer subtitleRes = ROW_SUBTITLES.get(rowKey);
+        if (subtitle != null && subtitleRes != null) {
+            final String text = context.getString(subtitleRes);
+            if (!text.contentEquals(subtitle.getText())) {
+                subtitle.setText(text);
+            }
+        }
 
         final Object card = tile.getTag(R.id.homepage_style_card_tag);
         final Object cardKey = tile.getTag(R.id.homepage_style_card_key);
-        if (card != null && tile.getBackground() == card && Integer.valueOf(key).equals(cardKey)) {
+        if (card != null && tile.getBackground() == card && key.equals(cardKey)) {
             return;
         }
 
@@ -189,12 +238,11 @@ public final class HomepageTileStyler {
         if (icon != null && !isAccount) {
             final GradientDrawable circle = new GradientDrawable();
             circle.setShape(GradientDrawable.OVAL);
-            circle.setColor(ColorUtils.setAlphaComponent(ICON_COLOURS[colourIndex],
-                    ICON_TINT_ALPHA));
+            circle.setColor(colour);
             icon.setBackground(circle);
             final int pad = Math.round(dp(context, 8));
             icon.setPadding(pad, pad, pad, pad);
-            icon.setColorFilter(ICON_COLOURS[colourIndex], PorterDuff.Mode.SRC_IN);
+            icon.setColorFilter(ICON_GLYPH_COLOUR, PorterDuff.Mode.SRC_IN);
             icon.setTag(R.id.homepage_style_card_tag, Boolean.TRUE);
         }
     }

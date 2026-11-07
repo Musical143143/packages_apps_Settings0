@@ -250,4 +250,21 @@
     <string name="card_quick_airplane">Airplane mode</string>
     <string name="card_quick_location">Location</string>
     <string name="card_quick_dnd">Do not disturb</string>
+
+    <!-- Card layout subtitles, matching the mockup rows. -->
+    <string name="homepage_mock_page_style">Search bar, header, greeting and tile look</string>
+    <string name="homepage_mock_evolver">Pixel at heart. Yours by design</string>
+    <string name="homepage_mock_network">Mobile, Wi-Fi, hotspot</string>
+    <string name="homepage_mock_connected_devices">Bluetooth, pairing</string>
+    <string name="homepage_mock_apps">Recent apps, default apps</string>
+    <string name="homepage_mock_notifications">Notification history, conversations</string>
+    <string name="homepage_mock_sound">Volume and vibration</string>
+    <string name="homepage_mock_modes">Do Not Disturb, Bedtime, Driving</string>
+    <string name="homepage_mock_display">Dark theme, font size, brightness</string>
+    <string name="homepage_mock_wallpaper">Home, lock screen</string>
+    <string name="homepage_mock_system">Languages, gestures, time</string>
+    <string name="homepage_mock_about">OnePlus Nord 4</string>
+    <string name="homepage_mock_security">App security, device lock, permissions</string>
+    <string name="homepage_mock_location">On/4 apps have access to location</string>
+    <string name="homepage_mock_accounts_backup">Back up data, copy data from another device</string>
 </resources>

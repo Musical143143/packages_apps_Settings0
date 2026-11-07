@@ -42,7 +42,7 @@
             android:entryValues="@array/homepage_style_position_values"
             android:defaultValue="bottom"
             android:persistent="true"
-            android:summary="%s" />
+            app:useSimpleSummaryProvider="true" />
 
         <SwitchPreference
             android:key="glass_bottom_bar"
@@ -59,7 +59,7 @@
             android:title="@string/homepage_style_header_title"
             android:dialogTitle="@string/homepage_style_header_title_dialog"
             android:defaultValue="*THINK POSITIVE ⭐"
-            android:summary="%s" />
+            app:useSimpleSummaryProvider="true" />
 
         <SwitchPreference
             android:key="show_title"
@@ -127,7 +127,7 @@
             android:entries="@array/homepage_style_align_entries"
             android:entryValues="@array/homepage_style_align_values"
             android:defaultValue="left"
-            android:summary="%s" />
+            app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
 
     <PreferenceCategory
@@ -140,7 +140,7 @@
             android:entries="@array/homepage_style_spacing_entries"
             android:entryValues="@array/homepage_style_spacing_values"
             android:defaultValue="spacious"
-            android:summary="%s" />
+            app:useSimpleSummaryProvider="true" />
 
         <ListPreference
             android:key="tile_elevation"
@@ -148,7 +148,7 @@
             android:entries="@array/homepage_style_elevation_entries"
             android:entryValues="@array/homepage_style_elevation_values"
             android:defaultValue="lifted"
-            android:summary="%s" />
+            app:useSimpleSummaryProvider="true" />
 
         <ListPreference
             android:key="tile_title_size"
@@ -156,7 +156,7 @@
             android:entries="@array/homepage_style_title_size_entries"
             android:entryValues="@array/homepage_style_title_size_values"
             android:defaultValue="normal"
-            android:summary="%s" />
+            app:useSimpleSummaryProvider="true" />
 
         <SwitchPreference
             android:key="tile_show_summaries"
