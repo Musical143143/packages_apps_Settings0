@@ -169,15 +169,22 @@ public class NirwanaSubpageActivity extends Activity {
         int accent = getColor(R.color.nirwana_accent);
         int off = getColor(R.color.nirwana_text_secondary);
         Switch toggle = new Switch(this);
-        toggle.setChecked(NirwanaPrefs.getBoolean(this, row.key, row.defaultOn));
+        boolean bound = NirwanaSystemBridge.isBound(row.key);
+        toggle.setChecked(bound
+                ? NirwanaSystemBridge.read(this, row.key, row.defaultOn)
+                : NirwanaPrefs.getBoolean(this, row.key, row.defaultOn));
         toggle.setThumbTintList(new ColorStateList(
                 new int[][] {{android.R.attr.state_checked}, {}},
                 new int[] {accent, off}));
         toggle.setTrackTintList(new ColorStateList(
                 new int[][] {{android.R.attr.state_checked}, {}},
                 new int[] {withAlpha(accent, 0x80), getColor(R.color.nirwana_track_off)}));
-        toggle.setOnCheckedChangeListener(
-                (button, checked) -> NirwanaPrefs.setBoolean(this, row.key, checked));
+        toggle.setOnCheckedChangeListener((button, checked) -> {
+            NirwanaPrefs.setBoolean(this, row.key, checked);
+            if (bound) {
+                NirwanaSystemBridge.write(this, row.key, checked);
+            }
+        });
         item.addView(toggle);
         item.setOnClickListener(v -> toggle.toggle());
         return item;
