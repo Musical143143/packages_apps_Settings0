@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2026 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+<resources>
+    <!-- Nirwana Engine: hub -->
+    <string name="nirwana_engine_title">Nirwana Engine</string>
+    <string name="nirwana_engine_subtitle">Your Device, Your Style!</string>
+
+    <!-- Nirwana Engine: hub tiles and page titles -->
+    <string name="nirwana_tile_status_bar">Status Bar</string>
+    <string name="nirwana_tile_fonts">Fonts</string>
+    <string name="nirwana_tile_quick">Quick Settings</string>
+    <string name="nirwana_tile_notifications">Notifications</string>
+    <string name="nirwana_tile_sounds">Sounds</string>
+    <string name="nirwana_icon_packs_title">Icon Packs</string>
+    <string name="nirwana_tile_gestures">Gestures</string>
+    <string name="nirwana_tile_buttons">Buttons</string>
+    <string name="nirwana_tile_misc">Miscellaneous</string>
+    <string name="nirwana_tile_about">About Device</string>
+    <string name="nirwana_tile_battery">Battery</string>
+    <string name="nirwana_tile_storage">Storage</string>
+    <string name="nirwana_lockscreen_title">Lockscreen Settings</string>
+
+    <!-- Nirwana Engine: page subtitles -->
+    <string name="nirwana_lockscreen_subtitle">It should look beautiful, even on standby</string>
+    <string name="nirwana_status_bar_subtitle">Choose what you want on status bar</string>
+    <string name="nirwana_icons_subtitle">Explore Nirwana Exclusive Icon Packs</string>
+    <string name="nirwana_gestures_subtitle">Control your device with gestures</string>
+    <string name="nirwana_buttons_subtitle">Customise hardware and navigation keys</string>
+    <string name="nirwana_quick_subtitle">Choose which tiles appear in quick settings</string>
+    <string name="nirwana_notifications_subtitle">Notification history and conversations</string>
+    <string name="nirwana_sounds_subtitle">Haptics, audio effects and volume</string>
+    <string name="nirwana_fonts_subtitle">Choose the typeface for your system</string>
+    <string name="nirwana_misc_subtitle">Extras and experiments</string>
+    <string name="nirwana_about_subtitle">Know what\'s hiding inside</string>
+
+    <!-- Nirwana Engine: section headers -->
+    <string name="nirwana_section_behaviour">Lockscreen Behaviour</string>
+    <string name="nirwana_section_status_clock">Status bar clock</string>
+    <string name="nirwana_section_sliders">Sliders and bars</string>
+    <string name="nirwana_section_device">Device</string>
+
+    <!-- Nirwana Engine: lockscreen -->
+    <string name="nirwana_lock_clock_style">Clock style</string>
+    <string name="nirwana_clock_ios">iOS Style Clock</string>
+    <string name="nirwana_clock_classic">Classic Clock</string>
+    <string name="nirwana_clock_minimal">Minimal Clock</string>
+    <string name="nirwana_custom_clocks">Custom Lockscreen Clocks</string>
+    <string name="nirwana_custom_clocks_summary">Explore Nirwana exclusive clocks</string>
+    <string name="nirwana_max_notification">Max Notification</string>
+    <string name="nirwana_max_notification_summary">Display notifications on the lockscreen</string>
+    <string name="nirwana_weather_updates">Weather Updates</string>
+    <string name="nirwana_weather_updates_summary">Show live weather conditions</string>
+    <string name="nirwana_media_art_cover">Media Art Cover</string>
+    <string name="nirwana_media_art_cover_summary">Display media art cover</string>
+    <string name="nirwana_charging_info">Charging Information</string>
+    <string name="nirwana_charging_info_summary">Show charging speed</string>
+    <string name="nirwana_ambient_display">Ambient Display</string>
+    <string name="nirwana_ambient_display_summary">Screen wakes up for new notifications</string>
+    <string name="nirwana_always_on_display">Always On Display</string>
+    <string name="nirwana_always_on_display_summary">Always shows time and notifications</string>
+
+    <!-- Nirwana Engine: status bar -->
+    <string name="nirwana_net_speed">Internet Speed Indicator</string>
+    <string name="nirwana_net_speed_summary">Real time speed of your connection</string>
+    <string name="nirwana_auto_hide">Auto Hide</string>
+    <string name="nirwana_auto_hide_traffic_summary">Hide traffic monitor when inactive</string>
+    <string name="nirwana_auto_hide_clock_summary">Hide status bar clock on lockscreen</string>
+    <string name="nirwana_status_bar_icons">Status Bar Icons</string>
+    <string name="nirwana_status_bar_icons_summary">Select icons to show on statusbar</string>
+    <string name="nirwana_colour_notif">Colour Notification Icons</string>
+    <string name="nirwana_colour_notif_summary">Switch to colored notification icons</string>
+    <string name="nirwana_notif_count">Notification Count</string>
+    <string name="nirwana_notif_count_summary">Show number of pending notification</string>
+    <string name="nirwana_extended_clock">Extended clock</string>
+    <string name="nirwana_extended_clock_summary">Add additional features in clock</string>
+    <string name="nirwana_clock_seconds">Clock Seconds</string>
+    <string name="nirwana_clock_seconds_summary">Show seconds on status bar clock</string>
+
+    <!-- Nirwana Engine: icon packs -->
+    <string name="nirwana_icon_pack">Icon Pack</string>
+    <string name="nirwana_icon_pack_summary">Set custom icon style</string>
+    <string name="nirwana_wifi_icon">Wifi Icon</string>
+    <string name="nirwana_battery_icon">Battery Icon</string>
+    <string name="nirwana_cellular_icon">Cellular Icon</string>
+    <string name="nirwana_signal_icon">Signal Icon</string>
+    <string name="nirwana_icon_default">Default</string>
+    <string name="nirwana_icon_rounded">Rounded</string>
+    <string name="nirwana_icon_outlined">Outlined</string>
+    <string name="nirwana_volume_slider">Volume Panel Slider</string>
+    <string name="nirwana_nav_bar">Navigation Bar</string>
+    <string name="nirwana_brightness_slider">Brightness Slider</string>
+
+    <!-- Nirwana Engine: gestures and buttons -->
+    <string name="nirwana_double_tap">Double tap to sleep</string>
+    <string name="nirwana_double_tap_summary">Tap twice on an empty area to lock</string>
+    <string name="nirwana_swipe_brightness">Swipe for brightness</string>
+    <string name="nirwana_swipe_brightness_summary">Slide along the left edge to adjust</string>
+    <string name="nirwana_back_gesture">Back gesture</string>
+    <string name="nirwana_back_gesture_summary">Swipe from the edge to go back</string>
+    <string name="nirwana_nav_mode">Navigation mode</string>
+    <string name="nirwana_nav_mode_summary">Choose how you move around the system</string>
+    <string name="nirwana_nav_gestural">Gestural</string>
+    <string name="nirwana_nav_three_button">3-button</string>
+    <string name="nirwana_torch_long">Long press to toggle torch</string>
+    <string name="nirwana_torch_long_summary">Hold volume down on the lockscreen</string>
+    <string name="nirwana_volume_wake">Volume keys wake screen</string>
+    <string name="nirwana_volume_wake_summary">Press a volume key to wake the device</string>
+
+    <!-- Nirwana Engine: quick settings -->
+    <string name="nirwana_qs_battery_saver">Battery Saver tile</string>
+    <string name="nirwana_qs_scanner">Scanner</string>
+    <string name="nirwana_qs_scanner_summary">QR code scanner tile</string>
+    <string name="nirwana_qs_caffeine">Caffeine</string>
+    <string name="nirwana_qs_caffeine_summary">Keep the screen awake from a tile</string>
+    <string name="nirwana_qs_dnd">Do Not Disturb tile</string>
+    <string name="nirwana_qs_brightness">Brightness slider</string>
+    <string name="nirwana_qs_brightness_summary">Show the slider at the top</string>
+    <string name="nirwana_qs_media">Media player</string>
+    <string name="nirwana_qs_media_summary">Show what is playing</string>
+
+    <!-- Nirwana Engine: notifications and sounds -->
+    <string name="nirwana_notif_history">Notification history</string>
+    <string name="nirwana_notif_history_summary">Review recently dismissed alerts</string>
+    <string name="nirwana_conversations">Conversation</string>
+    <string name="nirwana_conversations_summary">Show conversations first</string>
+    <string name="nirwana_notif_dots">Notification dots</string>
+    <string name="nirwana_notif_dots_summary">Show a badge on app icons</string>
+    <string name="nirwana_haptics">Haptic feedback</string>
+    <string name="nirwana_haptics_summary">Vibrate on touch</string>
+    <string name="nirwana_dolby">Dolby Atmos</string>
+    <string name="nirwana_dolby_summary">Immersive audio</string>
+    <string name="nirwana_volume_style">Volume panel style</string>
+    <string name="nirwana_volume_slider_style">Slider</string>
+    <string name="nirwana_volume_stacked">Stacked</string>
+
+    <!-- Nirwana Engine: fonts and miscellaneous -->
+    <string name="nirwana_font_family">Font family</string>
+    <string name="nirwana_font_google_sans">Google Sans</string>
+    <string name="nirwana_font_roboto">Roboto</string>
+    <string name="nirwana_font_system">System default</string>
+    <string name="nirwana_import_font">Import</string>
+    <string name="nirwana_import_font_summary">Import a .ttf or .otf font</string>
+    <string name="nirwana_smooth_anim">Smooth animations</string>
+    <string name="nirwana_smooth_anim_summary">Use Nirwana motion curves</string>
+    <string name="nirwana_dev_extras">Developer extras</string>
+    <string name="nirwana_dev_extras_summary">Show extra debugging tiles</string>
+
+    <!-- Nirwana Engine: about device, battery and storage -->
+    <string name="nirwana_build_number">Build number</string>
+    <string name="nirwana_android_version">Android version</string>
+    <string name="nirwana_kernel">Kernel</string>
+    <string name="nirwana_processor">Processor</string>
+    <string name="nirwana_uptime">Up time</string>
+    <string name="nirwana_uptime_value">%1$dh %2$dm</string>
+    <string name="nirwana_storage_total">Storage</string>
+    <string name="nirwana_gb_value">%1$d GB</string>
+    <string name="nirwana_available">Available</string>
+    <string name="nirwana_battery_usage">Battery Usage</string>
+    <string name="nirwana_battery_usage_summary">View usage since last full charge</string>
+    <string name="nirwana_sleep_mode">Sleep Mode</string>
+    <string name="nirwana_sleep_mode_summary">Off / Will never turn on automatically</string>
+    <string name="nirwana_battery_saver">Battery Saver</string>
+    <string name="nirwana_battery_optimization">Battery optimization</string>
+    <string name="nirwana_battery_optimization_summary">Battery optimization availability</string>
+    <string name="nirwana_charging_control">Charging Control</string>
+    <string name="nirwana_charging_control_summary">Customise charging schedule and limits for battery</string>
+    <string name="nirwana_battery_stats">Battery stats</string>
+    <string name="nirwana_battery_stats_summary">View detailed battery usage stats</string>
+    <string name="nirwana_free_up_space">Free up space</string>
+    <string name="nirwana_free_up_space_summary">Go to Files app to manage and free up some space</string>
+    <string name="nirwana_storage_details">Storage details</string>
+    <string name="nirwana_storage_details_summary">See what is using space</string>
+
+    <!-- Nirwana Engine: misc -->
+    <string name="nirwana_unavailable">Not available on this build yet</string>
+</resources>

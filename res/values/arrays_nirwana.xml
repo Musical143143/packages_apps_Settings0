@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2026 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+<resources>
+    <string-array name="nirwana_clock_styles">
+        <item>@string/nirwana_clock_ios</item>
+        <item>@string/nirwana_clock_classic</item>
+        <item>@string/nirwana_clock_minimal</item>
+    </string-array>
+    <string-array name="nirwana_icon_styles">
+        <item>@string/nirwana_icon_default</item>
+        <item>@string/nirwana_icon_rounded</item>
+        <item>@string/nirwana_icon_outlined</item>
+    </string-array>
+    <string-array name="nirwana_nav_modes">
+        <item>@string/nirwana_nav_gestural</item>
+        <item>@string/nirwana_nav_three_button</item>
+    </string-array>
+    <string-array name="nirwana_volume_styles">
+        <item>@string/nirwana_volume_slider_style</item>
+        <item>@string/nirwana_volume_stacked</item>
+    </string-array>
+    <string-array name="nirwana_font_families">
+        <item>@string/nirwana_font_google_sans</item>
+        <item>@string/nirwana_font_roboto</item>
+        <item>@string/nirwana_font_system</item>
+    </string-array>
+</resources>

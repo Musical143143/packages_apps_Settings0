@@ -6489,5 +6489,20 @@
 
         <!-- This is the longest AndroidManifest.xml ever. -->
 
+            <!-- Nirwana Engine: custom settings UI (hub and subpages). -->
+        <activity android:name=".nirwana.NirwanaEngineActivity"
+                  android:label="@string/nirwana_engine_title"
+                  android:theme="@android:style/Theme.DeviceDefault.NoActionBar"
+                  android:exported="true">
+            <intent-filter>
+                <action android:name="com.android.settings.action.NIRWANA_ENGINE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".nirwana.NirwanaSubpageActivity"
+                  android:label="@string/nirwana_engine_title"
+                  android:theme="@android:style/Theme.DeviceDefault.NoActionBar"
+                  android:exported="false" />
     </application>
 </manifest>
